@@ -10,53 +10,121 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
 <!-- highlight.js (code) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
 <style>
-  :root { --maxw: 820px; --fg: #1b1f24; --muted: #57606a; --accent: #0b5fa5; --border: #d7dde3; --code-bg: #f6f8fa; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    color: var(--fg); line-height: 1.65; margin: 0; background: #fff;
-    font-size: 17px;
+  :root {
+    --bg: #0a0e14; --bg-soft: #0f1620; --border: #1f2a3a; --border-glow: #2a3b52;
+    --fg: #e6edf3; --muted: #8b97a7; --faint: #5c6878;
+    --accent: #58a6ff; --accent-2: #7ee787; --accent-3: #d2a8ff; --code-bg: #0f1620;
+    --maxw: 860px;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 56px 24px 96px; }
-  h1, h2, h3, h4 { line-height: 1.25; font-weight: 650; scroll-margin-top: 1em; }
-  h1 { font-size: 2.05em; margin: 0 0 .2em; letter-spacing: -0.01em; }
-  h2 { font-size: 1.5em; margin: 2.1em 0 .6em; padding-bottom: .25em; border-bottom: 1px solid var(--border); }
-  h3 { font-size: 1.2em; margin: 1.7em 0 .5em; }
-  h4 { font-size: 1.04em; margin: 1.4em 0 .4em; color: var(--muted); }
-  p { margin: 0 0 1em; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    color: var(--fg); line-height: 1.7; margin: 0; background: var(--bg);
+    font-size: 17px; -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(900px circle at 15% -10%, rgba(88,166,255,0.10), transparent 45%),
+      radial-gradient(800px circle at 90% 5%, rgba(210,168,255,0.08), transparent 45%);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background-image:
+      linear-gradient(rgba(88,166,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,166,255,0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(10,14,20,0.72); backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .home-link {
+    font-family: var(--mono); font-size: 14px; font-weight: 500;
+    color: var(--muted); text-decoration: none;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg-soft); transition: all .15s;
+  }
+  .home-link:hover { color: var(--accent); border-color: var(--border-glow); text-decoration: none; }
+  .home-link .prompt { color: var(--accent); }
+  .topbar-badge { display: inline-flex; gap: 7px; }
+  .topbar-badge .d { width: 11px; height: 11px; border-radius: 50%; }
+  .topbar-badge .r { background: #ff5f56; } .topbar-badge .y { background: #ffbd2e; } .topbar-badge .g { background: #27c93f; }
+  .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2));
+    z-index: 60; transition: width .1s linear; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 48px 24px 110px; }
+  h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; scroll-margin-top: 70px; letter-spacing: -0.02em; }
+  h1 {
+    font-size: 2.3em; margin: 0 0 .3em;
+    background: linear-gradient(120deg, var(--accent), var(--accent-3) 60%, var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h2 { font-size: 1.55em; margin: 2.2em 0 .6em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.22em; margin: 1.8em 0 .5em; color: var(--fg); }
+  h4 { font-size: 1.05em; margin: 1.4em 0 .4em; color: var(--muted); }
+  p { margin: 0 0 1.1em; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  hr { border: 0; border-top: 1px solid var(--border); margin: 2.2em 0; }
-  ul, ol { padding-left: 1.5em; margin: 0 0 1em; }
-  li { margin: .3em 0; }
-  blockquote { margin: 1em 0; padding: .2em 1em; color: var(--muted); border-left: 3px solid var(--border); }
-  code { font-family: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Consolas, monospace; font-size: .88em; }
-  :not(pre) > code { background: var(--code-bg); padding: .15em .4em; border-radius: 5px; border: 1px solid var(--border); }
-  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: .82em; line-height: 1.5; margin: 0 0 1.2em; }
+  strong { color: #fff; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 2.4em 0; }
+  ul, ol { padding-left: 1.5em; margin: 0 0 1.1em; }
+  li { margin: .35em 0; }
+  li::marker { color: var(--faint); }
+  blockquote { margin: 1.2em 0; padding: .4em 1.1em; color: var(--muted);
+    border-left: 3px solid var(--accent); background: var(--bg-soft); border-radius: 0 8px 8px 0; }
+  code { font-family: var(--mono); font-size: .85em; }
+  :not(pre) > code { background: rgba(88,166,255,0.10); color: #b6d4ff;
+    padding: .15em .45em; border-radius: 5px; border: 1px solid rgba(88,166,255,0.18); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; overflow-x: auto; font-size: .82em; line-height: 1.55; margin: 0 0 1.3em; }
   pre code { background: none; border: 0; padding: 0; }
-  pre.mermaid { background: #fff; border: 1px solid var(--border); text-align: center; }
-  table { border-collapse: collapse; width: 100%; margin: 1em 0 1.4em; font-size: .9em; display: block; overflow-x: auto; }
-  th, td { border: 1px solid var(--border); padding: 7px 11px; text-align: left; vertical-align: top; }
-  th { background: var(--code-bg); font-weight: 650; }
-  tr:nth-child(even) td { background: #fbfcfd; }
-  .katex-display { overflow-x: auto; overflow-y: hidden; padding: .35em 0; }
+  pre.mermaid { background: var(--bg-soft); border: 1px solid var(--border); text-align: center; border-radius: 10px; padding: 18px; }
+  pre.mermaid svg { max-width: 100%; height: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0 1.5em; font-size: .9em; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--bg-soft); font-weight: 700; color: var(--fg); }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: .4em 0; }
+  .katex { color: var(--fg); }
   .subtitle { color: var(--muted); font-size: 1.05em; }
+  ::selection { background: rgba(88,166,255,0.30); }
+  @media (max-width: 560px) { .wrap { padding: 32px 18px 90px; } h1 { font-size: 1.8em; } }
   @media print {
-    body { font-size: 11pt; }
+    body { font-size: 11pt; background: #fff; color: #1b1f24; }
+    body::before, body::after, .topbar, .progress { display: none; }
     .wrap { max-width: none; padding: 0 6mm; }
-    h2 { page-break-after: avoid; }
+    h1 { color: #1b1f24; -webkit-text-fill-color: #1b1f24; }
+    a { color: #1b1f24; }
     pre, table, .katex-display, pre.mermaid { page-break-inside: avoid; }
     h2, h3, h4 { page-break-after: avoid; }
-    a { color: var(--fg); }
   }
 </style>
 </head>
 <body>
+<div class="progress" id="progress"></div>
+<nav class="topbar">
+  <a class="home-link" href="../index.html"><span class="prompt">&gt;</span> cd ~/blog</a>
+  <span class="topbar-badge"><span class="d r"></span><span class="d y"></span><span class="d g"></span></span>
+</nav>
 <div class="wrap">
 <h1 id="the-evolution-of-deep-learning-architectures-since-the-transformer">The Evolution of Deep Learning Architectures Since the Transformer</h1>
 <p><strong>A Technical White Paper</strong></p>
@@ -2662,7 +2730,7 @@ def speculative_step(target, draft, prefix, k):
 <!-- Mermaid (diagrams) -->
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  mermaid.initialize({ startOnLoad: true, theme: "dark", securityLevel: "loose" });
   window.__mermaidReady = false;
   try {
     await mermaid.run({ querySelector: "pre.mermaid" });
@@ -2689,6 +2757,19 @@ def speculative_step(target, draft, prefix, k):
     window.__katexHljsReady = true;
   }
   window.addEventListener("load", renderAll);
+
+  (function () {
+    var bar = document.getElementById("progress");
+    function update() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var scrolled = max > 0 ? h.scrollTop / max : 0;
+      if (bar) bar.style.width = (scrolled * 100) + "%";
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
 </script>
 </body>
 </html>
