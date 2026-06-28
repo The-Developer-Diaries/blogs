@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Machine Learning: A Comprehensive Survey of Its Branches</title>
+
+<!-- KaTeX (math) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" crossorigin="anonymous" />
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+<!-- highlight.js (code) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+  :root { --maxw: 820px; --fg: #1b1f24; --muted: #57606a; --accent: #0b5fa5; --border: #d7dde3; --code-bg: #f6f8fa; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    color: var(--fg); line-height: 1.65; margin: 0; background: #fff;
+    font-size: 17px;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 56px 24px 96px; }
+  h1, h2, h3, h4 { line-height: 1.25; font-weight: 650; scroll-margin-top: 1em; }
+  h1 { font-size: 2.05em; margin: 0 0 .2em; letter-spacing: -0.01em; }
+  h2 { font-size: 1.5em; margin: 2.1em 0 .6em; padding-bottom: .25em; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.2em; margin: 1.7em 0 .5em; }
+  h4 { font-size: 1.04em; margin: 1.4em 0 .4em; color: var(--muted); }
+  p { margin: 0 0 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 2.2em 0; }
+  ul, ol { padding-left: 1.5em; margin: 0 0 1em; }
+  li { margin: .3em 0; }
+  blockquote { margin: 1em 0; padding: .2em 1em; color: var(--muted); border-left: 3px solid var(--border); }
+  code { font-family: "SF Mono", SFMono-Regular, ui-monospace, Menlo, Consolas, monospace; font-size: .88em; }
+  :not(pre) > code { background: var(--code-bg); padding: .15em .4em; border-radius: 5px; border: 1px solid var(--border); }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: .82em; line-height: 1.5; margin: 0 0 1.2em; }
+  pre code { background: none; border: 0; padding: 0; }
+  pre.mermaid { background: #fff; border: 1px solid var(--border); text-align: center; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0 1.4em; font-size: .9em; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--border); padding: 7px 11px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); font-weight: 650; }
+  tr:nth-child(even) td { background: #fbfcfd; }
+  .katex-display { overflow-x: auto; overflow-y: hidden; padding: .35em 0; }
+  .subtitle { color: var(--muted); font-size: 1.05em; }
+  @media print {
+    body { font-size: 11pt; }
+    .wrap { max-width: none; padding: 0 6mm; }
+    h2 { page-break-after: avoid; }
+    pre, table, .katex-display, pre.mermaid { page-break-inside: avoid; }
+    h2, h3, h4 { page-break-after: avoid; }
+    a { color: var(--fg); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1 id="machine-learning-a-comprehensive-survey-of-its-branches">Machine Learning: A Comprehensive Survey of Its Branches</h1>
+<p><strong>A Technical White Paper</strong></p>
+<p><em>Iteration 2 — expanded with worked code, algorithm walkthroughs, and architecture diagrams</em></p>
+<hr>
+<h2 id="abstract">Abstract</h2>
+<p>Machine learning (ML) is the discipline concerned with building systems that improve their performance on a task through experience rather than through explicit, hand-written rules. Over roughly seven decades it has grown from a curiosity at the intersection of statistics, optimization, and artificial intelligence into the engine behind search, recommendation, translation, drug discovery, autonomous control, and the large generative models that now dominate public attention. This white paper offers a <em>map of the entire field</em>: it begins with the formal learning problem—hypothesis spaces, loss functions, empirical risk minimization, and the bias–variance trade-off—and then expands, branch by branch, into the major learning paradigms. We treat <strong>supervised learning</strong> (regression and classification, with the full algorithmic zoo: linear and logistic regression, regularized linear models, support vector machines and kernels, decision trees, bagging and random forests, gradient boosting, k-nearest neighbors, naive Bayes, and discriminant analysis); <strong>unsupervised learning</strong> (k-means, hierarchical and density-based clustering, Gaussian mixtures and the EM algorithm, principal component analysis, manifold learning and t-SNE/UMAP, autoencoders, density estimation, and association-rule mining); <strong>semi-supervised learning</strong> (self-training, co-training, graph-based label propagation, and consistency regularization); <strong>self-supervised learning</strong> (pretext tasks, contrastive and non-contrastive representation learning); <strong>reinforcement learning</strong> (Markov decision processes, dynamic programming, Monte Carlo and temporal-difference methods, Q-learning, policy gradients, actor–critic, and deep RL); and <strong>deep learning</strong> as the representation-learning substrate that cuts across all of the above. We then survey the <em>cross-cutting paradigms</em> that reshape how learning is organized rather than what is optimized: transfer learning and fine-tuning, multi-task learning, meta-learning (&quot;learning to learn&quot;), online and continual learning, active learning, federated learning, and ensemble methods. Around the algorithms we describe the <strong>end-to-end ML lifecycle</strong>—data collection and cleaning, feature engineering, model selection and hyperparameter tuning via cross-validation, evaluation with task-appropriate metrics, and deployment/monitoring (MLOps)—and the <strong>learning theory</strong> that explains when and why generalization is possible (VC dimension, PAC learning, regularization, the double-descent phenomenon). We close with the field&#39;s open problems: data efficiency, distribution shift and robustness, interpretability, fairness and bias, privacy, and the safe deployment of increasingly capable systems. Throughout we work the underlying mathematics, give compact runnable-quality code where it clarifies a method, and provide diagrams of the major taxonomies and data flows. The aim is a single coherent reference that situates every important sub-field of machine learning relative to the others.</p>
+<p><strong>Keywords:</strong> machine learning, supervised learning, unsupervised learning, semi-supervised learning, self-supervised learning, reinforcement learning, deep learning, regression, classification, clustering, dimensionality reduction, empirical risk minimization, loss functions, bias-variance trade-off, regularization, overfitting, generalization, linear regression, logistic regression, ridge, lasso, elastic net, support vector machine, kernel methods, decision tree, random forest, bagging, boosting, gradient boosting, XGBoost, k-nearest neighbors, naive Bayes, discriminant analysis, k-means, hierarchical clustering, DBSCAN, Gaussian mixture model, expectation-maximization, principal component analysis, manifold learning, t-SNE, UMAP, autoencoder, density estimation, association rules, label propagation, contrastive learning, Markov decision process, dynamic programming, temporal-difference learning, Q-learning, policy gradient, actor-critic, deep reinforcement learning, transfer learning, fine-tuning, multi-task learning, meta-learning, online learning, continual learning, active learning, federated learning, ensemble methods, cross-validation, hyperparameter tuning, feature engineering, MLOps, VC dimension, PAC learning, double descent, gradient descent, stochastic gradient descent, optimization, fairness, interpretability, robustness, distribution shift.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-introduction-what-machine-learning-is">Introduction: What Machine Learning Is</a></li>
+<li><a href="#2-the-formal-learning-problem">The Formal Learning Problem</a></li>
+<li><a href="#3-a-taxonomy-of-the-branches">A Taxonomy of the Branches</a></li>
+<li><a href="#4-supervised-learning">Supervised Learning</a></li>
+<li><a href="#5-unsupervised-learning">Unsupervised Learning</a></li>
+<li><a href="#6-semi-supervised-learning">Semi-Supervised Learning</a></li>
+<li><a href="#7-self-supervised-learning">Self-Supervised Learning</a></li>
+<li><a href="#8-reinforcement-learning">Reinforcement Learning</a></li>
+<li><a href="#9-deep-learning-the-representation-learning-substrate">Deep Learning: The Representation-Learning Substrate</a></li>
+<li><a href="#10-cross-cutting-paradigms">Cross-Cutting Paradigms</a></li>
+<li><a href="#11-the-machine-learning-lifecycle">The Machine Learning Lifecycle</a></li>
+<li><a href="#12-model-evaluation-and-metrics">Model Evaluation and Metrics</a></li>
+<li><a href="#13-learning-theory-and-generalization">Learning Theory and Generalization</a></li>
+<li><a href="#14-optimization-for-machine-learning">Optimization for Machine Learning</a></li>
+<li><a href="#15-challenges-ethics-and-responsible-ml">Challenges, Ethics, and Responsible ML</a></li>
+<li><a href="#16-future-directions-and-conclusion">Future Directions and Conclusion</a></li>
+<li><a href="#17-references">References</a></li>
+</ol>
+<hr>
+<h2 id="1-introduction-what-machine-learning-is">1. Introduction: What Machine Learning Is</h2>
+<h3 id="11-a-working-definition">1.1 A working definition</h3>
+<p>A classic operational definition is due to Tom Mitchell (1997):</p>
+<blockquote>
+<p>A computer program is said to <strong>learn</strong> from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.</p>
+</blockquote>
+<p>The three placeholders (T, P, E) frame every machine-learning system. For a spam filter: the task T is classifying emails as spam or not; the performance measure P might be the fraction correctly classified; the experience E is a corpus of labeled emails. The defining shift relative to classical programming is that we do <strong>not</strong> write the decision rule by hand—we specify an objective and a space of candidate rules, and let an optimization procedure search that space using data.</p>
+<p><pre class="mermaid">flowchart LR
+    A[Classical Programming] --&gt; B[Rules + Data -&gt; Output]
+    C[Machine Learning] --&gt; D[Data + Output -&gt; Rules/Model]
+</pre></p>
+<h3 id="12-why-it-matters-and-when-to-use-it">1.2 Why it matters and when to use it</h3>
+<p>Machine learning earns its keep when at least one of the following holds: (1) the rules are too complex or too numerous to write by hand (recognizing a cat in a photo); (2) the rules drift over time and must adapt (fraud patterns); (3) the rules must be personalized at scale (recommendations); or (4) the relationship is statistical rather than logical (predicting demand). Where a small, stable set of rules suffices, ordinary software engineering remains the better tool—ML adds data dependencies, opacity, and maintenance burden that should be justified.</p>
+<h3 id="13-the-disciplines-it-draws-on">1.3 The disciplines it draws on</h3>
+<p>Machine learning sits at the confluence of several fields, and its vocabulary reflects this heritage:</p>
+<ul>
+<li><strong>Statistics</strong> contributes estimation, hypothesis testing, the bias–variance decomposition, and the language of probability distributions.</li>
+<li><strong>Optimization</strong> contributes gradient methods, convex analysis, and duality (e.g., the SVM dual).</li>
+<li><strong>Computer science</strong> contributes data structures, algorithmic complexity, and the systems that make training at scale feasible.</li>
+<li><strong>Information theory</strong> contributes entropy, cross-entropy, and the KL divergence that underlie many loss functions.</li>
+<li><strong>Cognitive science and neuroscience</strong> contributed early inspiration (the perceptron, neural networks), though modern systems are engineered artifacts, not faithful brain models.</li>
+</ul>
+<h3 id="14-a-brief-historical-arc">1.4 A brief historical arc</h3>
+<p><pre class="mermaid">timeline
+    title Milestones in Machine Learning
+    1957 : Perceptron (Rosenblatt)
+    1967 : k-Nearest Neighbors
+    1986 : Backpropagation popularized
+    1995 : Support Vector Machines : Random Forests (precursor)
+    1998 : LeNet (CNN for digits)
+    2001 : Random Forests (Breiman)
+    2006 : Deep learning revival (pretraining)
+    2012 : AlexNet wins ImageNet
+    2014 : GANs : seq2seq + attention
+    2016 : AlphaGo (deep RL)
+    2017 : Transformer
+    2018 : BERT / GPT
+    2020 : GPT-3 : scaling laws
+    2022 : ChatGPT : diffusion image models
+    2023 : Open LLMs : multimodal models
+</pre></p>
+<p>The field has oscillated between symbolic AI and statistical learning, weathered two &quot;AI winters,&quot; and—since roughly 2012—been propelled by the confluence of large datasets, parallel hardware (GPUs/TPUs), and scalable architectures. The remainder of this paper organizes the resulting body of methods into a coherent map.</p>
+<h3 id="15-anatomy-of-a-machine-learning-system">1.5 Anatomy of a machine-learning system</h3>
+<p>A deployed ML system is far more than a model object. The diagram below shows the components that surround the learned function—each is treated in detail later (data lifecycle in §11, evaluation in §12, monitoring/MLOps in §11.5).</p>
+<p><pre class="mermaid">flowchart TB
+    subgraph Offline[Offline / training time]
+        RAW[Raw data sources] --&gt; ING[Ingestion &amp; labeling]
+        ING --&gt; FE[Feature engineering]
+        FE --&gt; TR[Training: fit f-theta]
+        TR --&gt; EVAL[Evaluation &amp; validation]
+        EVAL --&gt; REG[Model registry / versioning]
+    end
+    subgraph Online[Online / serving time]
+        REQ[Incoming request x] --&gt; FS[Feature lookup/transform]
+        FS --&gt; PRED[Model inference f-theta of x]
+        PRED --&gt; RESP[Prediction y-hat]
+    end
+    REG --&gt;|deploy| PRED
+    RESP --&gt; LOG[Logs &amp; ground-truth join]
+    LOG --&gt; MON[Monitoring: drift, performance]
+    MON --&gt;|retrain trigger| TR
+</pre></p>
+<h3 id="16-the-shortest-possible-end-to-end-example">1.6 The shortest possible end-to-end example</h3>
+<p>To make the abstract definition concrete, here is a complete supervised-learning program: load data, split, fit a model, and measure generalization. Every later section elaborates one piece of this skeleton.</p>
+<p><pre><code class="language-python">from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, roc_auc_score
+
+# E = experience (labeled data), T = classify tumors, P = accuracy/AUC
+X, y = load_breast_cancer(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=0)
+
+# A "model" = preprocessing + estimator, fit by minimizing empirical risk
+model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=10_000))
+model.fit(X_tr, y_tr)
+
+# P measured on data the model never saw -&gt; an estimate of expected risk R(f)
+proba = model.predict_proba(X_te)[:, 1]
+print(f"accuracy={accuracy_score(y_te, model.predict(X_te)):.3f}")
+print(f"roc_auc ={roc_auc_score(y_te, proba):.3f}")
+</code></pre></p>
+<p>The three ingredients of Mitchell&#39;s definition are visible: the <strong>experience</strong> <code>(X, y)</code>, the <strong>task</strong> (binary classification), and the <strong>performance measure</strong> evaluated <em>on held-out data</em>—the single most important discipline in the field.</p>
+<hr>
+<h2 id="2-the-formal-learning-problem">2. The Formal Learning Problem</h2>
+<p>Before enumerating branches, we fix the mathematical frame that nearly all of them share.</p>
+<h3 id="21-data-hypotheses-and-risk">2.1 Data, hypotheses, and risk</h3>
+<p>Assume data are drawn i.i.d. from an unknown joint distribution \(\mathcal{D}\) over an input space \(\mathcal{X}\) and an output space \(\mathcal{Y}\):</p>
+<p>\[ (x_i, y_i) \sim \mathcal{D}, \quad i = 1, \dots, n. \]</p>
+<p>We choose a <strong>hypothesis space</strong> \(\mathcal{H}\) of candidate functions f: \(\mathcal{X} \to \mathcal{Y}\) (linear maps, trees, neural networks, …) and a <strong>loss function</strong> \(\ell(f(x), y)\) that measures the cost of predicting f(x) when the truth is y. The quantity we <em>care</em> about is the <strong>expected risk</strong> (generalization error):</p>
+<p>\[ R(f) = \mathbb{E}_{(x,y)\sim\mathcal{D}}\big[\ell(f(x), y)\big]. \]</p>
+<p>Because \(\mathcal{D}\) is unknown, we cannot compute R(f). Instead we minimize its empirical surrogate, the <strong>empirical risk</strong> over the training set:</p>
+<p>\[ \hat{R}(f) = \frac{1}{n}\sum_{i=1}^{n} \ell(f(x_i), y_i). \]</p>
+<p><strong>Empirical Risk Minimization (ERM)</strong> selects \(\hat f = \arg\min_{f\in\mathcal{H}} \hat R(f)\). The central theoretical question of the field is: <em>when does small empirical risk imply small expected risk?</em> That is the problem of <strong>generalization</strong>, addressed in §13.</p>
+<h3 id="22-the-biasvariance-trade-off">2.2 The bias–variance trade-off</h3>
+<p>For squared-error regression, the expected error at a point x decomposes cleanly. Let \(\bar f(x) = \mathbb{E}_{\mathcal{T}}\)[\(\hat f(x)\)] be the average prediction over training sets \(\mathcal{T}\). Then</p>
+<p>\[ \mathbb{E}\big[(y - \hat f(x))^2\big] = \underbrace{(\bar f(x) - \mathbb{E}[y\mid x])^2}_{\text{bias}^2} + \underbrace{\mathbb{E}\big[(\hat f(x) - \bar f(x))^2\big]}_{\text{variance}} + \underbrace{\sigma^2}_{\text{irreducible noise}}. \]</p>
+<ul>
+<li><strong>Bias</strong> is error from wrong assumptions—too simple a model (underfitting).</li>
+<li><strong>Variance</strong> is sensitivity to the particular training sample—too complex a model (overfitting).</li>
+<li><strong>Irreducible noise</strong> \(\sigma^2\) cannot be removed by any model.</li>
+</ul>
+<p>Model capacity trades one for the other; the art of ML is finding the sweet spot, usually via regularization and validation.</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph Capacity
+        U[Low capacity&lt;br/&gt;High bias&lt;br/&gt;Underfit] --&gt; S[Sweet spot]
+        S --&gt; O[High capacity&lt;br/&gt;High variance&lt;br/&gt;Overfit]
+    end
+</pre></p>
+<h3 id="23-overfitting-regularization-and-capacity-control">2.3 Overfitting, regularization, and capacity control</h3>
+<p>A model <strong>overfits</strong> when it memorizes idiosyncrasies of the training set that do not generalize. The standard remedies recur throughout the field:</p>
+<ul>
+<li><strong>Regularization</strong>: add a penalty \(\Omega(f)\) to the objective, minimizing \(\hat R(f) + \lambda\Omega(f) (e.g., \ell_2\) weight penalty, \(\ell_1\) sparsity).</li>
+<li><strong>More data</strong>: enlarging n shrinks variance.</li>
+<li><strong>Simpler hypothesis space</strong>: fewer parameters, shallower trees, lower-degree polynomials.</li>
+<li><strong>Early stopping / dropout / data augmentation</strong>: implicit regularizers, especially in deep nets.</li>
+<li><strong>Validation</strong>: hold out data to estimate R(f) honestly and to choose \(\lambda\) and other hyperparameters.</li>
+</ul>
+<h3 id="24-seeing-the-trade-off-in-code">2.4 Seeing the trade-off in code</h3>
+<p>The bias–variance story is not just a formula—it is observable. The following experiment fits polynomials of increasing degree to a noisy sine wave and measures train vs test error. Low-degree models underfit (high bias); high-degree models overfit (high variance); the test error is U-shaped.</p>
+<p><pre><code class="language-python">import numpy as np
+from numpy.polynomial import polynomial as P
+
+rng = np.random.default_rng(0)
+def make_data(n):
+    x = rng.uniform(-1, 1, n)
+    y = np.sin(2 * np.pi * x) + rng.normal(0, 0.25, n)   # signal + noise
+    return x, y
+
+x_tr, y_tr = make_data(30)
+x_te, y_te = make_data(1000)
+
+for degree in [1, 3, 9, 15]:
+    coef = np.polyfit(x_tr, y_tr, degree)              # ERM over polynomials
+    tr = np.mean((np.polyval(coef, x_tr) - y_tr) ** 2)
+    te = np.mean((np.polyval(coef, x_te) - y_te) ** 2)
+    print(f"degree={degree:2d}  train_mse={tr:.3f}  test_mse={te:.3f}")
+# Typical: train error falls monotonically; test error dips then explodes.
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    subgraph Error vs capacity
+        direction TB
+        TRN[Training error: decreases with capacity] 
+        TST[Test error: U-shaped, minimum at sweet spot]
+    end
+    LOWC[Low capacity] --&gt; SWEET[Optimal capacity] --&gt; HIGHC[High capacity]
+    LOWC -.high bias.-&gt; SWEET
+    HIGHC -.high variance.-&gt; SWEET
+</pre></p>
+<p>The lesson generalizes far beyond polynomials: <strong>capacity must be matched to data</strong>, and validation error—not training error—is the quantity to minimize. (The over-parameterized regime that breaks this U-shape is the <em>double descent</em> phenomenon of §13.3.)</p>
+<p>With this scaffold in place we can now place each branch of ML on the map.</p>
+<hr>
+<h2 id="3-a-taxonomy-of-the-branches">3. A Taxonomy of the Branches</h2>
+<p>The most common organizing axis is the <strong>nature of the supervisory signal</strong>—how much, and what kind of, feedback the learner receives.</p>
+<p><pre class="mermaid">flowchart TD
+    ML[Machine Learning]
+    ML --&gt; SL[Supervised Learning&lt;br/&gt;labeled data]
+    ML --&gt; UL[Unsupervised Learning&lt;br/&gt;no labels]
+    ML --&gt; SSL[Semi-Supervised&lt;br/&gt;few labels + many unlabeled]
+    ML --&gt; SELF[Self-Supervised&lt;br/&gt;labels from data itself]
+    ML --&gt; RL[Reinforcement Learning&lt;br/&gt;reward signal]
+
+    SL --&gt; REG[Regression]
+    SL --&gt; CLS[Classification]
+    UL --&gt; CLU[Clustering]
+    UL --&gt; DR[Dimensionality Reduction]
+    UL --&gt; DE[Density Estimation]
+    RL --&gt; VAL[Value-based]
+    RL --&gt; POL[Policy-based]
+    RL --&gt; AC[Actor-Critic]
+
+    DL[Deep Learning&lt;br/&gt;cross-cutting representation learning]
+    DL -.-&gt; SL
+    DL -.-&gt; UL
+    DL -.-&gt; SELF
+    DL -.-&gt; RL
+</pre></p>
+<p>A second, orthogonal axis describes <strong>how learning is organized</strong>—transfer, multi-task, meta, online, active, and federated learning (§10). A third axis is the <strong>model family</strong> (linear, kernel, tree, probabilistic, neural). These axes are independent: a random forest (tree family) does supervised classification; a transformer (neural family) can do self-supervised pretraining then supervised fine-tuning. Keeping the axes separate avoids the common confusion of treating &quot;deep learning&quot; as a sibling of &quot;supervised learning&quot;—it is not; it is a model family that participates in every paradigm.</p>
+<h3 id="31-choosing-a-paradigm-a-decision-guide">3.1 Choosing a paradigm: a decision guide</h3>
+<p>In practice the choice of branch is driven by the <em>data you have</em> and the <em>question you ask</em>. The flowchart below encodes the usual reasoning.</p>
+<p><pre class="mermaid">flowchart TD
+    Q1{Do you have labeled targets y?}
+    Q1 --&gt;|Yes, many| SUP[Supervised learning]
+    Q1 --&gt;|A few labels + lots of unlabeled| SEMI[Semi-supervised learning]
+    Q1 --&gt;|No labels| Q2{Goal?}
+    Q1 --&gt;|Labels are free from the data itself| SELF[Self-supervised pretraining]
+
+    SUP --&gt; Q3{Target type?}
+    Q3 --&gt;|Continuous| REGB[Regression]
+    Q3 --&gt;|Categorical| CLSB[Classification]
+
+    Q2 --&gt;|Group similar items| CLUB[Clustering]
+    Q2 --&gt;|Compress / visualize| DRB[Dimensionality reduction]
+    Q2 --&gt;|Model p of x / find anomalies| DEB[Density estimation]
+    Q2 --&gt;|Find co-occurrence rules| ARB[Association mining]
+
+    Q4{Sequential decisions with feedback?} --&gt;|Yes| RLB[Reinforcement learning]
+</pre></p>
+<h3 id="32-the-three-axes-at-a-glance">3.2 The three axes at a glance</h3>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Question it answers</th>
+<th>Example values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Supervisory signal</td>
+<td>What feedback drives learning?</td>
+<td>supervised, unsupervised, semi-, self-, reinforcement</td>
+</tr>
+<tr>
+<td>Organization</td>
+<td>How is learning structured/deployed?</td>
+<td>transfer, multi-task, meta, online, active, federated</td>
+</tr>
+<tr>
+<td>Model family</td>
+<td>What hypothesis space is searched?</td>
+<td>linear, kernel, tree/ensemble, probabilistic, neural</td>
+</tr>
+</tbody></table>
+<p>A concrete system is a <em>point</em> in this 3-D space. &quot;A LoRA-fine-tuned transformer doing instruction following&quot; = (self-supervised pretrain → supervised fine-tune) × (transfer/PEFT organization) × (neural family).</p>
+<p>The next five sections walk the supervisory-signal axis in turn.</p>
+<hr>
+<h2 id="4-supervised-learning">4. Supervised Learning</h2>
+<p>Supervised learning is the most mature and widely deployed branch. The learner is given labeled pairs (\(x_i, y_i\)) and must learn a mapping f: \(\mathcal{X}\to\mathcal{Y}\) that generalizes to unseen inputs. Two sub-problems are distinguished by the type of \(\mathcal{Y}\):</p>
+<ul>
+<li><strong>Regression</strong>: \(\mathcal{Y}=\mathbb{R}\) (or \(\mathbb{R}^k\)) — predict a continuous quantity (house price, temperature).</li>
+<li><strong>Classification</strong>: \(\mathcal{Y}=1,\dots,C\) — predict a discrete category (spam/ham, digit, disease).</li>
+</ul>
+<h3 id="41-linear-regression">4.1 Linear regression</h3>
+<p>The canonical starting point. We model the target as a linear function of features plus noise:</p>
+<p>\[ \hat y = w^\top x + b, \qquad y = w^\top x + b + \varepsilon,  \varepsilon\sim\mathcal{N}(0,\sigma^2). \]</p>
+<p>With squared-error loss the empirical objective is</p>
+<p>\[ J(w,b) = \frac{1}{n}\sum_{i=1}^n (w^\top x_i + b - y_i)^2. \]</p>
+<p>This is convex; stacking the data into a design matrix X\(\in\mathbb{R}^{n\times d}\) (with a bias column) and targets y, the <strong>normal equations</strong> give a closed-form solution:</p>
+<p>\[ w^\star = (X^\top X)^{-1} X^\top y. \]</p>
+<p>The same estimator is the <strong>maximum-likelihood</strong> estimator under Gaussian noise, connecting least squares to probability. When \(X^\top\) X is ill-conditioned (collinear features, d&gt;n), the inverse is unstable—motivating regularization.</p>
+<p>Two ways to fit it—the exact normal equations and iterative gradient descent—shown from scratch so the mechanics are transparent:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def add_bias(X):
+    return np.c_[np.ones(len(X)), X]            # prepend a column of 1s for b
+
+def fit_closed_form(X, y):
+    Xb = add_bias(X)
+    return np.linalg.solve(Xb.T @ Xb, Xb.T @ y)  # solve, never invert explicitly
+
+def fit_gradient_descent(X, y, lr=0.1, epochs=500):
+    Xb = add_bias(X)
+    w = np.zeros(Xb.shape[1])
+    n = len(y)
+    for _ in range(epochs):
+        grad = (2 / n) * Xb.T @ (Xb @ w - y)     # gradient of MSE
+        w -= lr * grad
+    return w
+
+# Synthetic data: y = 3 + 2*x1 - 1*x2 + noise
+rng = np.random.default_rng(0)
+X = rng.normal(size=(200, 2))
+y = 3 + 2 * X[:, 0] - X[:, 1] + rng.normal(0, 0.1, 200)
+print("closed form:", fit_closed_form(X, y).round(2))   # ~[3, 2, -1]
+print("grad descent:", fit_gradient_descent(X, y).round(2))
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    X[Features x] --&gt; DOT[Linear combo w.x + b]
+    DOT --&gt; YHAT[Prediction y-hat]
+    YHAT --&gt; LOSS[Squared error vs y]
+    LOSS --&gt;|gradient| UPD[Update w, b]
+    UPD --&gt; DOT
+</pre></p>
+<h3 id="42-regularized-linear-models-ridge-lasso-elastic-net">4.2 Regularized linear models: ridge, lasso, elastic net</h3>
+<p>Adding a penalty controls variance and handles high-dimensional or correlated features.</p>
+<ul>
+<li><strong>Ridge regression</strong> (\(\ell_2): \min_w\) Xw - \(y_2^2 + \lambdaw_2^2\). Closed form w = (\(X^\top X + \lambda I)^{-1}X^\top y\); shrinks coefficients smoothly, never exactly to zero.</li>
+<li><strong>Lasso</strong> (\(\ell_1): \min_w\) Xw - \(y_2^2 + \lambdaw_1\). The \(\ell_1\) penalty has corners that drive many coefficients to <em>exactly</em> zero, performing <strong>feature selection</strong>.</li>
+<li><strong>Elastic net</strong>: \(\lambda_1w_1 + \lambda_2w_2^2\) combines both—sparsity plus stability under correlated predictors.</li>
+</ul>
+<p><pre class="mermaid">flowchart LR
+    OLS[Ordinary Least Squares] --&gt;|add L2| RIDGE[Ridge: shrink]
+    OLS --&gt;|add L1| LASSO[Lasso: select]
+    RIDGE --&gt; EN[Elastic Net]
+    LASSO --&gt; EN
+</pre></p>
+<p>The geometry explains <em>why</em> \(\ell_1\) yields sparsity: the diamond-shaped \(\ell_1\) constraint region meets the elliptical loss contours at a corner (a zero coordinate), whereas the round \(\ell_2\) ball typically meets it off-axis.</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph L1[Lasso: L1 ball - diamond]
+        C1[Contours touch a CORNER -&gt; coefficient = 0]
+    end
+    subgraph L2[Ridge: L2 ball - circle]
+        C2[Contours touch off-axis -&gt; small but nonzero]
+    end
+</pre></p>
+<p>A quick empirical comparison on correlated, high-dimensional data where most features are irrelevant:</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.model_selection import cross_val_score
+
+rng = np.random.default_rng(0)
+n, d = 100, 50
+X = rng.normal(size=(n, d))
+true_w = np.zeros(d); true_w[:5] = [3, -2, 1.5, 0, 4]   # only 4 features matter
+y = X @ true_w + rng.normal(0, 0.5, n)
+
+for name, model in [("OLS", LinearRegression()),
+                    ("Ridge", Ridge(alpha=1.0)),
+                    ("Lasso", Lasso(alpha=0.1)),
+                    ("ElasticNet", ElasticNet(alpha=0.1, l1_ratio=0.5))]:
+    r2 = cross_val_score(model, X, y, cv=5, scoring="r2").mean()
+    nz = np.sum(np.abs(getattr(model.fit(X, y), "coef_")) &gt; 1e-6)
+    print(f"{name:11s} cv_R2={r2:+.3f}  nonzero_coefs={nz}")
+# Lasso/ElasticNet recover a sparse solution and generalize better than OLS here.
+</code></pre></p>
+<h3 id="43-logistic-regression">4.3 Logistic regression</h3>
+<p>Despite the name, this is a <em>classification</em> model. For binary labels it squashes a linear score through the <strong>sigmoid</strong> to produce a probability:</p>
+<p>\[ p(y=1\mid x) = \sigma(w^\top x + b) = \frac{1}{1 + e^{-(w^\top x + b)}}. \]</p>
+<p>Parameters are fit by minimizing the <strong>cross-entropy</strong> (negative log-likelihood):</p>
+<p>\[ J(w) = -\frac{1}{n}\sum_{i=1}^n \Big[ y_i\log \hat p_i + (1-y_i)\log(1-\hat p_i)\Big]. \]</p>
+<p>There is no closed form, but the objective is convex and solved by gradient descent or Newton&#39;s method (IRLS). The multi-class generalization replaces the sigmoid with the <strong>softmax</strong>:</p>
+<p>\[ p(y=c\mid x) = \frac{e^{w_c^\top x}}{\sum_{j=1}^C e^{w_j^\top x}}. \]</p>
+<p>Logistic regression remains a strong, interpretable baseline and the output layer of most neural classifiers.</p>
+<p>A from-scratch binary logistic regression makes the gradient explicit—note the elegant result that the gradient of cross-entropy is just <code>X^T (p - y)</code>:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def sigmoid(z):
+    return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))
+
+def fit_logreg(X, y, lr=0.1, epochs=2000, l2=0.0):
+    Xb = np.c_[np.ones(len(X)), X]
+    w = np.zeros(Xb.shape[1])
+    n = len(y)
+    for _ in range(epochs):
+        p = sigmoid(Xb @ w)                       # predicted probabilities
+        grad = Xb.T @ (p - y) / n + l2 * np.r_[0, w[1:]]   # don't penalize bias
+        w -= lr * grad
+    return w
+
+rng = np.random.default_rng(0)
+X = rng.normal(size=(300, 2))
+y = (X[:, 0] + 0.5 * X[:, 1] &gt; 0).astype(float)   # linearly separable-ish
+w = fit_logreg(X, y)
+proba = sigmoid(np.c_[np.ones(len(X)), X] @ w)
+acc = np.mean((proba &gt; 0.5) == y)
+print(f"weights={w.round(2)}  train_acc={acc:.3f}")
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    X[Features x] --&gt; LIN[w.x + b]
+    LIN --&gt; SIG[Sigmoid -&gt; probability in 0..1]
+    SIG --&gt; THR{p &gt; 0.5 ?}
+    THR --&gt;|yes| POS[Class 1]
+    THR --&gt;|no| NEG[Class 0]
+</pre></p>
+<h3 id="44-support-vector-machines-and-kernels">4.4 Support vector machines and kernels</h3>
+<p>The <strong>support vector machine (SVM)</strong> seeks the hyperplane that separates classes with the largest <strong>margin</strong>. For separable data with labels \(y_i\in-1,+1\):</p>
+<p>\[ \min_{w,b} \tfrac{1}{2}w^2 \quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1 \forall i. \]</p>
+<p>The <strong>soft-margin</strong> version introduces slack variables \(\xi_i\) to tolerate violations, equivalent to minimizing the <strong>hinge loss</strong> plus an \(\ell_2\) penalty:</p>
+<p>\[ \min_{w,b} \tfrac{1}{2}w^2 + C\sum_i \max\big(0,1 - y_i(w^\top x_i + b)\big). \]</p>
+<p>The decisive idea is the <strong>kernel trick</strong>: the dual depends on data only through inner products \(x_i^\top x_j\), which we may replace with a kernel k(\(x_i,x_j) = \phi(x_i)^\top\phi(x_j\)) computing inner products in a high- (even infinite-) dimensional feature space <em>without ever forming</em> \(\phi\). Common kernels:</p>
+<p>\[ \text{linear } x_i^\top x_j,\quad \text{polynomial } (x_i^\top x_j + c)^d,\quad \text{RBF } \exp(-\gammax_i - x_j^2). \]</p>
+<p>SVMs were the dominant classifier of the 2000s and remain excellent for small/medium tabular data.</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph Margin geometry
+        H[Decision boundary w.x + b = 0]
+        MP[+ margin: w.x + b = +1]
+        MM[- margin: w.x + b = -1]
+        SV[Support vectors lie ON the margins]
+    end
+    H --- MP
+    H --- MM
+    MP --- SV
+    MM --- SV
+</pre></p>
+<p>The kernel trick lets a <em>linear</em> algorithm draw <em>nonlinear</em> boundaries. The example below shows a linear SVM failing on concentric circles while an RBF kernel solves it:</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.svm import SVC
+from sklearn.datasets import make_circles
+from sklearn.model_selection import cross_val_score
+
+X, y = make_circles(n_samples=400, noise=0.1, factor=0.4, random_state=0)
+
+for name, kernel, kw in [("linear", "linear", {}),
+                         ("poly-3", "poly",   {"degree": 3}),
+                         ("rbf",    "rbf",    {"gamma": "scale"})]:
+    clf = SVC(kernel=kernel, C=1.0, **kw)
+    acc = cross_val_score(clf, X, y, cv=5).mean()
+    print(f"{name:7s} cv_accuracy={acc:.3f}")
+# linear ~0.5 (chance); rbf ~0.98 — the kernel reshapes the feature space.
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    IN[Input space:&lt;br/&gt;circles not linearly separable] --&gt;|phi via kernel| FS[Feature space:&lt;br/&gt;now linearly separable]
+    FS --&gt; HP[Linear max-margin hyperplane]
+</pre></p>
+<h3 id="45-decision-trees">4.5 Decision trees</h3>
+<p>A decision tree recursively partitions the feature space with axis-aligned splits, predicting a constant in each leaf. At each node it chooses the split that most reduces an impurity measure. For classification, <strong>Gini impurity</strong> and <strong>entropy</strong> are standard:</p>
+<p>\[ \text{Gini} = \sum_{c} p_c(1 - p_c),\qquad \text{Entropy} = -\sum_c p_c \log p_c, \]</p>
+<p>where \(p_c\) is the fraction of class c at the node; the split maximizing <strong>information gain</strong> (parent impurity minus weighted child impurity) is selected. For regression, splits minimize within-node variance. Trees are interpretable and handle mixed feature types and nonlinearity, but a single deep tree has high variance—motivating ensembles.</p>
+<p><pre class="mermaid">flowchart TD
+    R{Income &gt; 50k?} --&gt;|yes| A{Age &gt; 30?}
+    R --&gt;|no| B[Class: Decline]
+    A --&gt;|yes| C[Class: Approve]
+    A --&gt;|no| D[Class: Review]
+</pre></p>
+<p>The core of tree learning is <em>finding the best split</em>. This snippet computes information gain and scans candidate thresholds—the inner loop every tree library runs:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def gini(y):
+    if len(y) == 0:
+        return 0.0
+    p = np.bincount(y) / len(y)
+    return 1.0 - np.sum(p ** 2)
+
+def best_split(X, y):
+    n, d = X.shape
+    parent = gini(y)
+    best = (None, None, 0.0)   # (feature, threshold, gain)
+    for j in range(d):
+        for thr in np.unique(X[:, j]):
+            left = y[X[:, j] &lt;= thr]
+            right = y[X[:, j] &gt; thr]
+            if len(left) == 0 or len(right) == 0:
+                continue
+            child = (len(left) * gini(left) + len(right) * gini(right)) / n
+            gain = parent - child            # impurity reduction
+            if gain &gt; best[2]:
+                best = (j, thr, gain)
+    return best
+
+rng = np.random.default_rng(0)
+X = rng.normal(size=(200, 3))
+y = (X[:, 0] + X[:, 1] &gt; 0).astype(int)
+j, thr, gain = best_split(X, y)
+print(f"split on feature {j} at {thr:.2f}, information gain={gain:.3f}")
+</code></pre></p>
+<h3 id="46-ensemble-methods-bagging-random-forests-boosting">4.6 Ensemble methods: bagging, random forests, boosting</h3>
+<p>Ensembles combine many weak learners into a strong one—often the best performers on tabular data.</p>
+<ul>
+<li><strong>Bagging</strong> (bootstrap aggregating): train many trees on bootstrap resamples and average their predictions. Averaging reduces variance without raising bias.</li>
+<li><strong>Random forests</strong> add feature subsampling at each split, decorrelating the trees so that averaging is even more effective. They are robust, require little tuning, and yield feature-importance estimates.</li>
+<li><strong>Boosting</strong> builds learners <em>sequentially</em>, each correcting the errors of the ensemble so far. <strong>AdaBoost</strong> reweights misclassified points; <strong>gradient boosting</strong> fits each new tree to the negative gradient of the loss (the pseudo-residuals):</li>
+</ul>
+<p>\[ F_{m}(x) = F_{m-1}(x) + \nu h_m(x),\qquad h_m \approx -\frac{\partial \ell(y, F_{m-1}(x))}{\partial F_{m-1}(x)}, \]</p>
+<p>with learning rate \(\nu\). Modern implementations—<strong>XGBoost</strong>, <strong>LightGBM</strong>, <strong>CatBoost</strong>—add second-order information, regularization, and clever histogram-based split finding, and dominate many structured-data competitions.</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph Bagging[Bagging - parallel]
+        T1[Tree 1] --&gt; AVG[Average]
+        T2[Tree 2] --&gt; AVG
+        T3[Tree 3] --&gt; AVG
+    end
+    subgraph Boosting[Boosting - sequential]
+        S1[Tree 1] --&gt; S2[Tree 2 fixes errors] --&gt; S3[Tree 3 fixes errors]
+    end
+</pre></p>
+<p>Gradient boosting is best understood by building it. Here is a minimal regression booster: each shallow tree fits the <em>residuals</em> of the running prediction.</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.tree import DecisionTreeRegressor
+
+def gradient_boost(X, y, n_estimators=100, lr=0.1, max_depth=2):
+    pred = np.full(len(y), y.mean())     # F_0 = mean (best constant)
+    trees = []
+    for _ in range(n_estimators):
+        residual = y - pred              # = -gradient of squared loss
+        tree = DecisionTreeRegressor(max_depth=max_depth).fit(X, residual)
+        pred += lr * tree.predict(X)     # additive update F_m = F_{m-1} + nu*h_m
+        trees.append(tree)
+    return trees, y.mean()
+
+def predict(trees, base, X, lr=0.1):
+    return base + lr * sum(t.predict(X) for t in trees)
+
+rng = np.random.default_rng(0)
+X = rng.uniform(-3, 3, size=(300, 1))
+y = np.sin(X[:, 0]) + rng.normal(0, 0.1, 300)
+trees, base = gradient_boost(X, y)
+mse = np.mean((predict(trees, base, X) - y) ** 2)
+print(f"boosting train MSE={mse:.4f}")
+</code></pre></p>
+<p>In production you would reach for tuned library implementations, which add regularization, second-order gradients, and histogram split-finding:</p>
+<p><pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import cross_val_score
+
+X, y = make_classification(n_samples=2000, n_features=20, n_informative=8,
+                           random_state=0)
+for name, model in [("RandomForest", RandomForestClassifier(n_estimators=300)),
+                    ("GradBoosting", GradientBoostingClassifier())]:
+    print(f"{name}: cv_acc={cross_val_score(model, X, y, cv=5).mean():.3f}")
+</code></pre></p>
+<p><pre class="mermaid">flowchart TB
+    F0[F0 = mean] --&gt; R1[Residuals] --&gt; H1[Tree 1]
+    H1 --&gt; F1[F1 = F0 + nu*h1] --&gt; R2[Residuals] --&gt; H2[Tree 2]
+    H2 --&gt; F2[F2 = F1 + nu*h2] --&gt; DOTS[...] --&gt; FM[Final additive model FM]
+</pre></p>
+<h3 id="47-k-nearest-neighbors">4.7 k-nearest neighbors</h3>
+<p>A purely <strong>instance-based</strong>, non-parametric method: store the training set; to predict, find the k closest training points (by Euclidean or other distance) and return their majority vote (classification) or mean (regression):</p>
+<p>\[ \hat y(x) = \frac{1}{k}\sum_{i\in N_k(x)} y_i. \]</p>
+<p>There is no training phase, but inference cost grows with the dataset and quality degrades in high dimensions (the <strong>curse of dimensionality</strong>, where distances concentrate). Approximate nearest-neighbor indexes (KD-trees, ball trees, HNSW) make it practical at scale and underpin modern vector search.</p>
+<p>A vectorized from-scratch classifier—the entire algorithm is &quot;compute distances, vote&quot;:</p>
+<p><pre><code class="language-python">import numpy as np
+from scipy.stats import mode
+
+def knn_predict(X_train, y_train, X_test, k=5):
+    # pairwise squared Euclidean distances, shape (n_test, n_train)
+    d = ((X_test[:, None, :] - X_train[None, :, :]) ** 2).sum(-1)
+    nn = np.argsort(d, axis=1)[:, :k]          # indices of k nearest
+    return mode(y_train[nn], axis=1, keepdims=False).mode
+
+rng = np.random.default_rng(0)
+Xtr = rng.normal(size=(200, 4)); ytr = (Xtr[:, 0] &gt; 0).astype(int)
+Xte = rng.normal(size=(50, 4));  yte = (Xte[:, 0] &gt; 0).astype(int)
+print("kNN accuracy:", np.mean(knn_predict(Xtr, ytr, Xte) == yte))
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    Q[Query point x] --&gt; D[Compute distance to all training points]
+    D --&gt; S[Select k nearest neighbors]
+    S --&gt; V[Majority vote / mean]
+    V --&gt; P[Prediction]
+</pre></p>
+<h3 id="48-naive-bayes">4.8 Naive Bayes</h3>
+<p>A generative probabilistic classifier applying Bayes&#39; rule with a strong (naive) conditional-independence assumption among features given the class:</p>
+<p>\[ p(y\mid x) \propto p(y)\prod_{j=1}^d p(x_j\mid y). \]</p>
+<p>Despite the unrealistic independence assumption, it is fast, needs little data, and performs surprisingly well for text classification (spam filtering, sentiment) with multinomial or Bernoulli feature models.</p>
+<p>A complete spam classifier in a handful of lines—the classic application:</p>
+<p><pre><code class="language-python">from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+
+texts = ["win free money now", "meeting at noon tomorrow",
+         "free prize claim now", "project deadline friday",
+         "cheap pills buy now", "lunch with the team"]
+labels = [1, 0, 1, 0, 1, 0]                   # 1 = spam
+
+clf = make_pipeline(CountVectorizer(), MultinomialNB())
+clf.fit(texts, labels)
+print(clf.predict(["free money claim", "team meeting friday"]))  # -&gt; [1 0]
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    DOC[Document] --&gt; TOK[Tokens / word counts]
+    TOK --&gt; LIK[Per-class likelihoods&lt;br/&gt;product of p of word given class]
+    LIK --&gt; PRIOR[Times class prior p of class]
+    PRIOR --&gt; ARGMAX[Argmax -&gt; predicted class]
+</pre></p>
+<h3 id="49-linear-and-quadratic-discriminant-analysis">4.9 Linear and quadratic discriminant analysis</h3>
+<p>LDA models each class as a Gaussian with a shared covariance, yielding a linear decision boundary; QDA allows per-class covariances, giving quadratic boundaries. They are the generative counterparts to logistic regression&#39;s discriminative approach and remain useful, well-calibrated baselines.</p>
+<h3 id="410-choosing-a-supervised-algorithm">4.10 Choosing a supervised algorithm</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Strengths</th>
+<th>Weaknesses</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Linear/Logistic regression</td>
+<td>Fast, interpretable, calibrated</td>
+<td>Only linear boundaries</td>
+<td>Baselines, inference-critical apps</td>
+</tr>
+<tr>
+<td>Ridge/Lasso/Elastic net</td>
+<td>Handle high-dim, feature selection</td>
+<td>Still linear</td>
+<td>Genomics, sparse features</td>
+</tr>
+<tr>
+<td>SVM (kernel)</td>
+<td>Strong on small data, max-margin</td>
+<td>Scales poorly to large n</td>
+<td>Small/medium tabular, text</td>
+</tr>
+<tr>
+<td>Decision tree</td>
+<td>Interpretable, mixed types</td>
+<td>High variance alone</td>
+<td>Explainable rules</td>
+</tr>
+<tr>
+<td>Random forest</td>
+<td>Robust, low tuning</td>
+<td>Less interpretable, larger</td>
+<td>General tabular baseline</td>
+</tr>
+<tr>
+<td>Gradient boosting</td>
+<td>Top tabular accuracy</td>
+<td>Tuning, sequential training</td>
+<td>Competitions, ranking, risk</td>
+</tr>
+<tr>
+<td>k-NN</td>
+<td>Simple, non-parametric</td>
+<td>Slow inference, curse of dim</td>
+<td>Recommendation, retrieval</td>
+</tr>
+<tr>
+<td>Naive Bayes</td>
+<td>Tiny data, very fast</td>
+<td>Independence assumption</td>
+<td>Text/spam classification</td>
+</tr>
+<tr>
+<td>Neural networks</td>
+<td>Flexible, scale with data</td>
+<td>Data/compute hungry</td>
+<td>Vision, NLP, large data</td>
+</tr>
+</tbody></table>
+<p>A pragmatic default for tabular problems is to start with a regularized linear model for a baseline, then a gradient-boosted tree ensemble for accuracy; reserve deep nets for high-dimensional perceptual data (images, audio, text).</p>
+<hr>
+<h2 id="5-unsupervised-learning">5. Unsupervised Learning</h2>
+<p>In unsupervised learning there are no labels—only inputs \(x_i\). The goal is to discover structure: groupings, low-dimensional coordinates, or the underlying probability distribution. Three sub-problems dominate: <strong>clustering</strong>, <strong>dimensionality reduction</strong>, and <strong>density estimation</strong> (with association-rule mining as a fourth, retail-flavored task).</p>
+<h3 id="51-clustering">5.1 Clustering</h3>
+<p>Clustering partitions data into groups such that points within a group are more similar than points across groups.</p>
+<h4 id="511-k-means">5.1.1 k-means</h4>
+<p>The workhorse. Given a target number of clusters k, it minimizes within-cluster squared distance:</p>
+<p>\[ \min_{S_j, \mu_j} \sum_{j=1}^k \sum_{x\in S_j} x - \mu_j^2. \]</p>
+<p><strong>Lloyd&#39;s algorithm</strong> alternates two steps until convergence:</p>
+<ol>
+<li><strong>Assign</strong> each point to its nearest centroid \(\mu_j\).</li>
+<li><strong>Update</strong> each centroid to the mean of its assigned points.</li>
+</ol>
+<p>It is fast and scalable but assumes roughly spherical, equally sized clusters, is sensitive to initialization (mitigated by <strong>k-means++</strong>), and requires k to be chosen in advance (via the elbow method or silhouette score).</p>
+<p>Lloyd&#39;s algorithm in full—the two-step assign/update loop is the entire method:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def kmeans(X, k, iters=100, seed=0):
+    rng = np.random.default_rng(seed)
+    centroids = X[rng.choice(len(X), k, replace=False)]   # random init
+    for _ in range(iters):
+        # ASSIGN: each point to nearest centroid
+        d = ((X[:, None, :] - centroids[None, :, :]) ** 2).sum(-1)
+        labels = d.argmin(1)
+        # UPDATE: centroid = mean of its assigned points
+        new = np.array([X[labels == j].mean(0) if np.any(labels == j)
+                        else centroids[j] for j in range(k)])
+        if np.allclose(new, centroids):
+            break
+        centroids = new
+    inertia = ((X - centroids[labels]) ** 2).sum()
+    return labels, centroids, inertia
+
+rng = np.random.default_rng(0)
+X = np.vstack([rng.normal(c, 0.5, (100, 2)) for c in ([0, 0], [4, 4], [0, 5])])
+labels, C, inertia = kmeans(X, k=3)
+print(f"inertia={inertia:.1f}  centroids=\n{C.round(2)}")
+</code></pre></p>
+<p><pre class="mermaid">flowchart TD
+    INIT[Initialize k centroids] --&gt; ASSIGN[Assign points to nearest centroid]
+    ASSIGN --&gt; UPDATE[Recompute centroids as cluster means]
+    UPDATE --&gt; CONV{Converged?}
+    CONV --&gt;|no| ASSIGN
+    CONV --&gt;|yes| DONE[Final clusters]
+</pre></p>
+<p>Choosing <code>k</code> is itself a small optimization—plot inertia (the elbow) or the silhouette score across candidate values:</p>
+<p><pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+for k in range(2, 7):
+    km = KMeans(n_clusters=k, n_init=10, random_state=0).fit(X)
+    print(f"k={k}  inertia={km.inertia_:7.1f}  "
+          f"silhouette={silhouette_score(X, km.labels_):.3f}")
+</code></pre></p>
+<h4 id="512-hierarchical-clustering">5.1.2 Hierarchical clustering</h4>
+<p>Builds a tree (<strong>dendrogram</strong>) of nested clusters. <strong>Agglomerative</strong> (bottom-up) starts with each point as its own cluster and repeatedly merges the closest pair; linkage criteria (single, complete, average, Ward) define &quot;closest.&quot; No k is needed up front—cut the dendrogram at any height to obtain a partition. Cost is typically O(\(n^2\log n\)), limiting it to modest n.</p>
+<h4 id="513-density-based-clustering-dbscan">5.1.3 Density-based clustering (DBSCAN)</h4>
+<p>DBSCAN groups points in dense regions and labels sparse points as noise. Two parameters: a radius \(\varepsilon\) and a minimum neighborhood count <em>minPts</em>. It finds clusters of arbitrary shape, needs no k, and is robust to outliers—but struggles when clusters have very different densities. HDBSCAN extends it hierarchically.</p>
+<h4 id="514-gaussian-mixture-models-and-em">5.1.4 Gaussian mixture models and EM</h4>
+<p>A GMM models data as a weighted sum of K Gaussians:</p>
+<p>\[ p(x) = \sum_{k=1}^K \pi_k\mathcal{N}(x\mid \mu_k, \Sigma_k),\qquad \sum_k \pi_k = 1. \]</p>
+<p>This is <strong>soft</strong> clustering—each point gets a responsibility (posterior probability) for each component. Parameters are fit by the <strong>Expectation–Maximization (EM)</strong> algorithm, which iterates:</p>
+<ul>
+<li><strong>E-step</strong>: compute responsibilities \(\gamma_{ik} = \dfrac{\pi_k \mathcal{N}(x_i\mid\mu_k,\Sigma_k)}{\sum_j \pi_j \mathcal{N}(x_i\mid\mu_j,\Sigma_j)}\).</li>
+<li><strong>M-step</strong>: update \(\pi_k,\mu_k,\Sigma_k\) as responsibility-weighted statistics.</li>
+</ul>
+<p>EM monotonically increases the data likelihood and is a general template far beyond GMMs (it underlies HMM training, missing-data imputation, and more). k-means is the hard-assignment, equal-spherical-covariance limit of a GMM.</p>
+<p><pre class="mermaid">flowchart TD
+    INIT[Initialize pi, mu, Sigma] --&gt; E[E-step: responsibilities gamma_ik]
+    E --&gt; M[M-step: update pi, mu, Sigma from weighted stats]
+    M --&gt; LL{Log-likelihood converged?}
+    LL --&gt;|no| E
+    LL --&gt;|yes| OUT[Soft cluster assignments + density model]
+</pre></p>
+<p>The four clustering algorithms make different assumptions—comparing them on the same non-convex data is illuminating (k-means fails on shapes DBSCAN handles):</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
+from sklearn.datasets import make_moons
+from sklearn.metrics import adjusted_rand_score as ari
+
+X, y = make_moons(n_samples=400, noise=0.06, random_state=0)
+algos = {
+    "KMeans":        KMeans(n_clusters=2, n_init=10, random_state=0),
+    "GMM":           GaussianMixture(n_components=2, random_state=0),
+    "Agglomerative": AgglomerativeClustering(n_clusters=2, linkage="single"),
+    "DBSCAN":        DBSCAN(eps=0.2, min_samples=5),
+}
+for name, algo in algos.items():
+    pred = algo.fit_predict(X)
+    print(f"{name:13s} ARI vs truth = {ari(y, pred):.3f}")
+# KMeans/GMM ~0.2-0.5 (they cut the crescents); single-link &amp; DBSCAN ~1.0.
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    KM[k-means&lt;br/&gt;hard, spherical] --&gt; GMM[GMM/EM&lt;br/&gt;soft, elliptical]
+    HC[Hierarchical&lt;br/&gt;nested, dendrogram]
+    DB[DBSCAN&lt;br/&gt;density, arbitrary shape, noise]
+</pre></p>
+<h3 id="52-dimensionality-reduction">5.2 Dimensionality reduction</h3>
+<p>High-dimensional data are hard to visualize, store, and model (curse of dimensionality). Dimensionality reduction finds a faithful low-dimensional representation.</p>
+<h4 id="521-principal-component-analysis-pca">5.2.1 Principal component analysis (PCA)</h4>
+<p>PCA finds the orthogonal directions of maximum variance. Center the data, form the covariance matrix \(\Sigma = \frac{1}{n}X^\top X\), and take its top eigenvectors; equivalently, use the <strong>singular value decomposition</strong> X = U S \(V^\top\), whose right singular vectors are the principal components. Projecting onto the top m components gives the best rank-m linear approximation in squared error (Eckart–Young theorem). PCA is the default for linear compression, denoising, and whitening; its limitation is linearity.</p>
+<p>PCA in five lines via the SVD, with the variance-explained diagnostic that tells you how many components to keep:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def pca(X, n_components):
+    Xc = X - X.mean(0)                       # center
+    U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+    components = Vt[:n_components]            # principal directions
+    scores = Xc @ components.T               # projected coordinates
+    explained = (S ** 2) / (S ** 2).sum()    # variance explained per component
+    return scores, components, explained
+
+rng = np.random.default_rng(0)
+latent = rng.normal(size=(500, 2))
+X = latent @ rng.normal(size=(2, 10)) + 0.05 * rng.normal(size=(500, 10))
+scores, comps, ev = pca(X, n_components=2)
+print("variance explained by top 5:", ev[:5].round(3))
+print("cumulative:", np.cumsum(ev)[:5].round(3))   # ~all in first 2 comps
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    HD[High-dim data X&lt;br/&gt;centered] --&gt; SVD[SVD: X = U S V^T]
+    SVD --&gt; PC[Top components = rows of V^T]
+    PC --&gt; PROJ[Project: scores = Xc . V^T]
+    PROJ --&gt; LD[Low-dim representation]
+</pre></p>
+<h4 id="522-manifold-learning-and-nonlinear-embeddings">5.2.2 Manifold learning and nonlinear embeddings</h4>
+<p>Real data often lie on a curved, low-dimensional <strong>manifold</strong> inside the ambient space. Nonlinear methods capture this:</p>
+<ul>
+<li><strong>Kernel PCA</strong> applies PCA in a kernel feature space.</li>
+<li><strong>Isomap / LLE / Laplacian eigenmaps</strong> preserve local geometry or geodesic distances.</li>
+<li><strong>t-SNE</strong> converts pairwise distances into probabilities and minimizes the KL divergence between high- and low-dimensional neighbor distributions; excellent for <em>visualization</em> but distances/cluster sizes are not globally meaningful.</li>
+<li><strong>UMAP</strong> builds a fuzzy topological graph and optimizes a low-dimensional layout; faster than t-SNE, better preserves global structure, and scales to millions of points.</li>
+</ul>
+<p>These are primarily exploratory/visualization tools (project to 2–3D), not general-purpose features.</p>
+<h4 id="523-autoencoders">5.2.3 Autoencoders</h4>
+<p>A neural approach: an <strong>encoder</strong> compresses input x to a latent code z=\(f_\theta(x)\) and a <strong>decoder</strong> reconstructs \(\hat x = g_\phi(z)\), trained to minimize reconstruction error x-\(\hat x^2\). The bottleneck forces a compact representation. Variants extend the idea: <strong>denoising autoencoders</strong> reconstruct from corrupted input; <strong>sparse autoencoders</strong> add an activation penalty; <strong>variational autoencoders (VAEs)</strong> impose a probabilistic latent prior and become generative models. Autoencoders bridge unsupervised learning, representation learning, and generative modeling.</p>
+<p><pre class="mermaid">flowchart LR
+    X[Input x&lt;br/&gt;dim D] --&gt; E1[Encoder&lt;br/&gt;D -&gt; 128 -&gt; 32]
+    E1 --&gt; Z[Latent code z&lt;br/&gt;bottleneck dim m &lt;&lt; D]
+    Z --&gt; D1[Decoder&lt;br/&gt;32 -&gt; 128 -&gt; D]
+    D1 --&gt; XH[Reconstruction x-hat]
+    XH -.reconstruction loss ||x - x-hat||^2.-&gt; X
+</pre></p>
+<p>A compact autoencoder in PyTorch (the unsupervised counterpart to PCA—nonlinear, learned by gradient descent):</p>
+<p><pre><code class="language-python">import torch, torch.nn as nn
+
+class Autoencoder(nn.Module):
+    def __init__(self, d_in, d_latent=32):
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Linear(d_in, 128), nn.ReLU(), nn.Linear(128, d_latent))
+        self.decoder = nn.Sequential(
+            nn.Linear(d_latent, 128), nn.ReLU(), nn.Linear(128, d_in))
+
+    def forward(self, x):
+        z = self.encoder(x)
+        return self.decoder(z), z
+
+model = Autoencoder(d_in=784)                  # e.g. flattened 28x28 images
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+loss_fn = nn.MSELoss()
+
+x = torch.randn(256, 784)                      # a batch (use real data in practice)
+for step in range(5):
+    x_hat, z = model(x)
+    loss = loss_fn(x_hat, x)                    # reconstruct the INPUT (no labels)
+    opt.zero_grad(); loss.backward(); opt.step()
+    print(f"step {step} recon_loss={loss.item():.4f}")
+</code></pre></p>
+<h3 id="53-density-estimation">5.3 Density estimation</h3>
+<p>Density estimation models the full distribution p(x), enabling anomaly detection, sampling, and likelihood evaluation. Methods range from simple <strong>histograms</strong> and <strong>kernel density estimation</strong> (place a smooth kernel on each point and sum) to parametric <strong>mixture models</strong> and, in the deep era, <strong>normalizing flows</strong>, <strong>autoregressive models</strong>, and <strong>diffusion models</strong> (the generative-modeling frontier, treated in the companion deep-learning paper). Anomaly/novelty detection (one-class SVM, isolation forests) is the practical face of density estimation: flag points the model assigns low probability.</p>
+<p>Anomaly detection via a learned density—low-likelihood points are outliers:</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.neighbors import KernelDensity
+from sklearn.ensemble import IsolationForest
+
+rng = np.random.default_rng(0)
+inliers = rng.normal(0, 1, size=(500, 2))
+outliers = rng.uniform(-6, 6, size=(20, 2))
+X = np.vstack([inliers, outliers])
+
+# Approach 1: kernel density estimate, threshold the log-likelihood
+kde = KernelDensity(bandwidth=0.5).fit(inliers)
+logp = kde.score_samples(X)
+flagged_kde = logp &lt; np.percentile(logp, 5)
+
+# Approach 2: isolation forest (isolates outliers with fewer random splits)
+iso = IsolationForest(contamination=0.04, random_state=0).fit(X)
+flagged_iso = iso.predict(X) == -1
+print(f"KDE flagged {flagged_kde.sum()}, IsolationForest flagged {flagged_iso.sum()}")
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    DATA[Data] --&gt; DENS[Estimate density p of x]
+    DENS --&gt; SCORE[Score each point's likelihood]
+    SCORE --&gt; THR{Below threshold?}
+    THR --&gt;|yes| ANOM[Anomaly]
+    THR --&gt;|no| NORM[Normal]
+</pre></p>
+<h3 id="54-association-rule-mining">5.4 Association-rule mining</h3>
+<p>Originating in market-basket analysis, association mining finds frequent co-occurrences and implication rules like \(\text{bread, butter}\Rightarrow\text{milk}\). Rules are scored by <strong>support</strong> (how often the itemset appears), <strong>confidence</strong> (conditional probability of the consequent), and <strong>lift</strong> (confidence over baseline). The <strong>Apriori</strong> and <strong>FP-growth</strong> algorithms find frequent itemsets efficiently. It powers recommendation, cross-selling, and web-usage mining.</p>
+<p>Computing the three rule metrics directly clarifies what they mean:</p>
+<p><pre><code class="language-python">from itertools import combinations
+
+baskets = [{"bread", "butter", "milk"}, {"bread", "butter"},
+           {"milk", "beer"}, {"bread", "milk"}, {"bread", "butter", "milk"}]
+n = len(baskets)
+
+def support(items):
+    items = set(items)
+    return sum(items &lt;= b for b in baskets) / n
+
+def rule(ante, cons):
+    conf = support(ante | cons) / support(ante)     # P(cons | ante)
+    lift = conf / support(cons)                      # vs independence baseline
+    return support(ante | cons), conf, lift
+
+s, c, l = rule({"bread", "butter"}, {"milk"})
+print(f"{{bread,butter}} =&gt; {{milk}}  support={s:.2f} confidence={c:.2f} lift={l:.2f}")
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    T[Transactions] --&gt; FI[Frequent itemsets&lt;br/&gt;support &gt;= min_support]
+    FI --&gt; R[Generate rules A =&gt; B]
+    R --&gt; M[Score: confidence, lift]
+    M --&gt; KEEP[Keep strong rules]
+</pre></p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Representative methods</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Clustering</td>
+<td>k-means, GMM/EM, DBSCAN, hierarchical</td>
+<td>Group assignments</td>
+</tr>
+<tr>
+<td>Dimensionality reduction</td>
+<td>PCA, t-SNE, UMAP, autoencoders</td>
+<td>Low-dim coordinates</td>
+</tr>
+<tr>
+<td>Density estimation</td>
+<td>KDE, mixtures, flows, diffusion</td>
+<td>Probability p(x), samples</td>
+</tr>
+<tr>
+<td>Association mining</td>
+<td>Apriori, FP-growth</td>
+<td>Rules with support/confidence</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-semi-supervised-learning">6. Semi-Supervised Learning</h2>
+<p>Labels are expensive (a radiologist annotating scans), but unlabeled data are cheap and abundant. <strong>Semi-supervised learning (SSL)</strong> uses a small labeled set together with a large unlabeled set, exploiting structure in the unlabeled data to learn a better decision boundary than labels alone would permit. It rests on assumptions that link the input distribution to the labels:</p>
+<ul>
+<li><strong>Smoothness</strong>: points close in input space share labels.</li>
+<li><strong>Cluster assumption</strong>: the decision boundary lies in low-density regions (it should not cut through dense clusters).</li>
+<li><strong>Manifold assumption</strong>: data lie on a low-dimensional manifold along which labels vary smoothly.</li>
+</ul>
+<p>Key techniques:</p>
+<ul>
+<li><strong>Self-training (pseudo-labeling)</strong>: train on labeled data, predict on unlabeled data, add the most confident predictions as new &quot;pseudo-labels,&quot; and retrain. Simple and widely effective, but can reinforce its own errors.</li>
+<li><strong>Co-training</strong>: two models trained on different feature &quot;views&quot; teach each other by labeling examples for one another.</li>
+<li><strong>Graph-based label propagation</strong>: build a similarity graph over all points and propagate labels from labeled to unlabeled nodes along edges, solving a smoothness-regularized objective.</li>
+<li><strong>Consistency regularization</strong>: encourage the model to produce the same output under small perturbations of an unlabeled input (augmentations, noise, dropout). Methods like the <strong>Π-model</strong>, <strong>Mean Teacher</strong>, <strong>MixMatch</strong>, and <strong>FixMatch</strong> combine pseudo-labeling with strong augmentation and now achieve near-supervised accuracy with a fraction of the labels.</li>
+</ul>
+<p><pre class="mermaid">flowchart LR
+    L[Few labeled] --&gt; M[Model]
+    U[Many unlabeled] --&gt;|pseudo-labels / consistency| M
+    M --&gt; P[Better boundary in low-density regions]
+</pre></p>
+<h3 id="61-self-training-in-code">6.1 Self-training in code</h3>
+<p>The self-training loop is concrete and surprisingly effective: train, predict on unlabeled data, promote confident predictions to labels, repeat.</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import make_classification
+
+rng = np.random.default_rng(0)
+X, y = make_classification(n_samples=1000, n_features=10, random_state=0)
+mask = rng.random(len(y)) &lt; 0.05                  # only 5% are labeled
+X_lab, y_lab = X[mask], y[mask]
+X_unlab = X[~mask]
+
+threshold = 0.95
+for round_ in range(5):
+    clf = LogisticRegression(max_iter=1000).fit(X_lab, y_lab)
+    if len(X_unlab) == 0:
+        break
+    proba = clf.predict_proba(X_unlab)
+    conf = proba.max(1)
+    confident = conf &gt;= threshold                 # only trust high-confidence
+    if not confident.any():
+        break
+    # promote confident pseudo-labels into the labeled set
+    X_lab = np.vstack([X_lab, X_unlab[confident]])
+    y_lab = np.concatenate([y_lab, proba[confident].argmax(1)])
+    X_unlab = X_unlab[~confident]
+    print(f"round {round_}: labeled set now {len(y_lab)}, "
+          f"remaining unlabeled {len(X_unlab)}")
+</code></pre></p>
+<p><code>scikit-learn</code> ships this as <code>SelfTrainingClassifier</code> and graph-based <code>LabelPropagation</code>/<code>LabelSpreading</code>. The modern deep variant adds <strong>consistency regularization</strong>:</p>
+<p><pre class="mermaid">flowchart TB
+    U[Unlabeled image] --&gt; WA[Weak augmentation] --&gt; M1[Model] --&gt; PL[Pseudo-label&lt;br/&gt;if confident]
+    U --&gt; SA[Strong augmentation] --&gt; M2[Model] --&gt; PRED[Prediction]
+    PL --&gt;|target| LOSS[Consistency loss]
+    PRED --&gt; LOSS
+    L[Labeled image] --&gt; SUP[Supervised loss]
+    LOSS --&gt; TOTAL[Total loss]
+    SUP --&gt; TOTAL
+</pre></p>
+<p>This weak/strong augmentation scheme is the essence of <strong>FixMatch</strong>, which reaches near-supervised accuracy with only a handful of labels per class.</p>
+<hr>
+<h2 id="7-self-supervised-learning">7. Self-Supervised Learning</h2>
+<p>Self-supervised learning (SSL, distinct from semi-supervised) is the engine behind modern foundation models. The idea: manufacture supervision <em>from the data itself</em> by hiding part of the input and predicting it, so no human labels are needed. After this <strong>pretext</strong> task produces general-purpose representations, a small labeled set fine-tunes for the <strong>downstream</strong> task. Two broad families:</p>
+<ul>
+<li><strong>Generative / predictive pretext tasks</strong>: predict masked or missing content. <strong>Masked language modeling</strong> (BERT) hides tokens and predicts them; <strong>next-token prediction</strong> (GPT) predicts the following token; <strong>masked image modeling</strong> (MAE) reconstructs masked image patches. The model must learn semantics to fill the blanks.</li>
+<li><strong>Contrastive and non-contrastive representation learning</strong>: learn an embedding where different augmentations of the same input (&quot;positives&quot;) are close and different inputs (&quot;negatives&quot;) are far. <strong>SimCLR</strong> and <strong>MoCo</strong> use the <strong>InfoNCE</strong> loss</li>
+</ul>
+<p>\[ \mathcal{L} = -\log\frac{\exp(\text{sim}(z_i, z_i^+)/\tau)}{\sum_{j}\exp(\text{sim}(z_i, z_j)/\tau)}, \]</p>
+<p>while <strong>BYOL</strong> and <strong>DINO</strong> dispense with explicit negatives using self-distillation and stop-gradient tricks. <strong>CLIP</strong> contrasts image–text pairs to learn a joint multimodal embedding.</p>
+<p>The two families have distinct data flows:</p>
+<p><pre class="mermaid">flowchart TB
+    subgraph Predictive[Generative / predictive pretext]
+        IN1[Input with parts MASKED] --&gt; ENC1[Encoder] --&gt; DEC1[Predict the masked content]
+        DEC1 --&gt; L1[Loss vs the hidden ground truth]
+    end
+    subgraph Contrastive[Contrastive representation learning]
+        X[Image] --&gt; A1[Augmentation 1] --&gt; E1[Encoder] --&gt; Z1[z_i]
+        X --&gt; A2[Augmentation 2] --&gt; E2[Encoder] --&gt; Z2[z_j positive]
+        Z1 --&gt; NCE[InfoNCE: pull positives together,&lt;br/&gt;push negatives apart]
+        Z2 --&gt; NCE
+    end
+</pre></p>
+<p>The InfoNCE contrastive loss—the heart of SimCLR/MoCo/CLIP—is a handful of tensor operations:</p>
+<p><pre><code class="language-python">import torch, torch.nn.functional as F
+
+def info_nce(z1, z2, temperature=0.5):
+    # z1, z2: (B, d) embeddings of two augmented views of the same B images
+    B = z1.shape[0]
+    z = F.normalize(torch.cat([z1, z2], dim=0), dim=1)   # (2B, d) on unit sphere
+    sim = z @ z.T / temperature                          # (2B, 2B) cosine sims
+    sim.fill_diagonal_(-1e9)                             # mask self-similarity
+    # positive for row i is its other view: i &lt;-&gt; i+B
+    targets = torch.cat([torch.arange(B) + B, torch.arange(B)]).to(z.device)
+    return F.cross_entropy(sim, targets)
+
+z1 = torch.randn(64, 128)        # encoder outputs for view 1
+z2 = torch.randn(64, 128)        # encoder outputs for view 2
+print("InfoNCE loss:", info_nce(z1, z2).item())
+</code></pre></p>
+<p>The masked-prediction objective (BERT for text, MAE for images) is even simpler conceptually—predict what you hid:</p>
+<p><pre class="mermaid">flowchart LR
+    SEQ["the cat sat on the [MASK]"] --&gt; ENC[Transformer encoder]
+    ENC --&gt; HEAD[Prediction head over vocabulary]
+    HEAD --&gt; OUT["[MASK] -&gt; 'mat' (cross-entropy vs true token)"]
+</pre></p>
+<p>Self-supervised pretraining is why a single model can be adapted to dozens of tasks: the representation, not the labels, does the heavy lifting. It is treated in depth in the companion deep-learning paper; here we note its place as a distinct learning paradigm—labels emerge from the data&#39;s own structure.</p>
+<hr>
+<h2 id="8-reinforcement-learning">8. Reinforcement Learning</h2>
+<p>Reinforcement learning (RL) addresses <strong>sequential decision-making</strong>: an <strong>agent</strong> interacts with an <strong>environment</strong>, takes <strong>actions</strong>, and receives <strong>rewards</strong>, learning a behavior (<strong>policy</strong>) that maximizes cumulative reward. Unlike supervised learning, there is no labeled &quot;correct action&quot;—only a scalar reward, often delayed, and the agent must <em>explore</em> to discover good behavior while <em>exploiting</em> what it knows.</p>
+<p><pre class="mermaid">flowchart LR
+    A[Agent] --&gt;|action a_t| E[Environment]
+    E --&gt;|state s_t+1, reward r_t+1| A
+</pre></p>
+<h3 id="81-markov-decision-processes">8.1 Markov decision processes</h3>
+<p>The standard formalism is the <strong>Markov Decision Process (MDP)</strong> (\(\mathcal{S}, \mathcal{A}, P, R, \gamma\)): states \(\mathcal{S}\), actions \(\mathcal{A}\), transition probabilities P(s&#39;\(\mid s,a\)), reward R(s,a), and a discount factor \(\gamma\in\)[0,1) that weights future rewards. The agent seeks a policy \(\pi(a\mid s)\) maximizing the expected <strong>return</strong></p>
+<p>\[ G_t = \sum_{k=0}^{\infty}\gamma^k r_{t+k+1}. \]</p>
+<p>The <strong>value function</strong> \(V^\pi(s) = \mathbb{E}\)*\(\pi\)[\(G_t\mid s_t=s\)] and <strong>action-value</strong> \(Q^\pi(s,a)\) measure expected return; both satisfy the recursive <strong>Bellman equations</strong>:</p>
+<p>\[ V^\pi(s) = \sum_a \pi(a\mid s)\sum_{s'} P(s'\mid s,a)\big[R + \gamma V^\pi(s')\big]. \]</p>
+<p>The optimal value obeys the <strong>Bellman optimality</strong> equation \(Q^(s,a) = \mathbb{E}\)[R + \(\gamma \max_{a'} Q^(s\)&#39;,a&#39;)].</p>
+<h3 id="82-dynamic-programming">8.2 Dynamic programming</h3>
+<p>When the model (P, R) is known, <strong>value iteration</strong> and <strong>policy iteration</strong> solve the MDP exactly by repeatedly applying the Bellman operator. These are the conceptual foundation but require a known model and tractable state space.</p>
+<p>Value iteration on a small MDP—repeatedly back up the Bellman optimality equation until values stop changing:</p>
+<p><pre><code class="language-python">import numpy as np
+
+# Tiny MDP: 3 states, 2 actions. P[a][s, s'] and R[s, a].
+P = {0: np.array([[0.8, 0.2, 0.0],     # action 0 transition matrix
+                  [0.0, 0.9, 0.1],
+                  [0.0, 0.0, 1.0]]),
+     1: np.array([[0.5, 0.5, 0.0],     # action 1
+                  [0.1, 0.1, 0.8],
+                  [0.0, 0.0, 1.0]])}
+R = np.array([[0.0, 0.0], [0.0, 0.0], [1.0, 1.0]])   # reward for entering state 2
+gamma = 0.9
+
+V = np.zeros(3)
+for _ in range(100):
+    Q = np.column_stack([R[:, a] + gamma * P[a] @ V for a in (0, 1)])
+    V_new = Q.max(1)                  # Bellman optimality backup
+    if np.allclose(V_new, V):
+        break
+    V = V_new
+policy = Q.argmax(1)
+print("optimal values:", V.round(3), " optimal policy:", policy)
+</code></pre></p>
+<h3 id="83-model-free-learning-monte-carlo-and-temporal-difference">8.3 Model-free learning: Monte Carlo and temporal difference</h3>
+<p>When the model is unknown, the agent learns from sampled experience.</p>
+<ul>
+<li><strong>Monte Carlo</strong> methods average complete-episode returns to estimate values.</li>
+<li><strong>Temporal-Difference (TD)</strong> learning bootstraps—updating estimates from other estimates after each step:</li>
+</ul>
+<p>\[ V(s_t) \leftarrow V(s_t) + \alpha\big[r_{t+1} + \gamma V(s_{t+1}) - V(s_t)\big]. \]</p>
+<p>The bracketed quantity is the <strong>TD error</strong>, a signal with a striking parallel to dopamine responses in the brain.</p>
+<h3 id="84-q-learning-and-sarsa">8.4 Q-learning and SARSA</h3>
+<p><strong>Q-learning</strong> is the canonical off-policy, value-based algorithm; it learns \(Q^\) directly:</p>
+<p>\[ Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha\big[r_{t+1} + \gamma\max_{a}Q(s_{t+1},a) - Q(s_t,a_t)\big]. \]</p>
+<p><strong>SARSA</strong> is its on-policy sibling (it uses the action actually taken, Q(\(s_{t+1},a_{t+1}\)), rather than the max). Exploration is typically handled by an \(\varepsilon-\)greedy policy.</p>
+<p>A complete tabular Q-learning agent on a 1-D walk—the update rule <em>is</em> the algorithm:</p>
+<p><pre><code class="language-python">import numpy as np
+
+# Line world: states 0..5, goal at 5 (+1 reward), actions: 0=left, 1=right
+N_STATES, GOAL = 6, 5
+def step(s, a):
+    s2 = max(0, s - 1) if a == 0 else min(N_STATES - 1, s + 1)
+    return s2, (1.0 if s2 == GOAL else 0.0), (s2 == GOAL)
+
+Q = np.zeros((N_STATES, 2))
+alpha, gamma, eps = 0.1, 0.95, 0.1
+rng = np.random.default_rng(0)
+
+for episode in range(500):
+    s = 0
+    for _ in range(50):
+        a = rng.integers(2) if rng.random() &lt; eps else int(Q[s].argmax())  # eps-greedy
+        s2, r, done = step(s, a)
+        # Q-learning update: bootstrap with the GREEDY next value
+        Q[s, a] += alpha * (r + gamma * Q[s2].max() - Q[s, a])
+        s = s2
+        if done:
+            break
+
+print("learned Q:\n", Q.round(2))
+print("greedy policy (0=left,1=right):", Q.argmax(1))   # should point right -&gt; goal
+</code></pre></p>
+<p><pre class="mermaid">flowchart TD
+    S[Observe state s] --&gt; EPS{rand &lt; epsilon?}
+    EPS --&gt;|yes explore| RAND[Random action]
+    EPS --&gt;|no exploit| GREEDY[argmax_a Q of s,a]
+    RAND --&gt; ACT[Take action a]
+    GREEDY --&gt; ACT
+    ACT --&gt; OBS[Observe r, s']
+    OBS --&gt; UPD[Q of s,a += alpha * TD-error]
+    UPD --&gt; S
+</pre></p>
+<h3 id="85-policy-gradient-and-actorcritic-methods">8.5 Policy-gradient and actor–critic methods</h3>
+<p>Value-based methods struggle with large or continuous action spaces. <strong>Policy-gradient</strong> methods parameterize the policy \(\pi_\theta\) directly and ascend the expected return via the policy-gradient theorem:</p>
+<p>\[ \nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta}\big[\nabla_\theta \log\pi_\theta(a\mid s)Q^{\pi_\theta}(s,a)\big]. \]</p>
+<p><strong>REINFORCE</strong> is the basic estimator; <strong>actor–critic</strong> methods reduce its variance by learning a value function (the <em>critic</em>) to provide the advantage signal for the policy (the <em>actor</em>). Modern algorithms—<strong>A3C/A2C</strong>, <strong>TRPO</strong>, <strong>PPO</strong>, <strong>DDPG</strong>, <strong>SAC</strong>—refine stability and sample efficiency. <strong>PPO</strong> in particular, with its clipped surrogate objective, became the default for both robotics control and, notably, <strong>RLHF</strong> (reinforcement learning from human feedback) that aligns large language models.</p>
+<p>The actor–critic architecture couples two learned functions—one chooses actions, one judges them:</p>
+<p><pre class="mermaid">flowchart LR
+    S[State s] --&gt; ACTOR[Actor pi-theta of a given s]
+    S --&gt; CRITIC[Critic V-phi of s]
+    ACTOR --&gt; A[Action a] --&gt; ENV[Environment]
+    ENV --&gt; R[Reward r, next state s']
+    R --&gt; TD[TD error = r + gamma*V of s' - V of s]
+    CRITIC --&gt; TD
+    TD --&gt;|update critic| CRITIC
+    TD --&gt;|advantage weights policy gradient| ACTOR
+</pre></p>
+<p>A minimal REINFORCE update sketch (policy gradient with a return-weighted log-probability):</p>
+<p><pre><code class="language-python">import torch, torch.nn as nn
+
+policy = nn.Sequential(nn.Linear(4, 64), nn.ReLU(), nn.Linear(64, 2))
+opt = torch.optim.Adam(policy.parameters(), lr=1e-2)
+
+def reinforce_update(log_probs, rewards, gamma=0.99):
+    # discounted returns G_t for each timestep
+    G, returns = 0.0, []
+    for r in reversed(rewards):
+        G = r + gamma * G
+        returns.insert(0, G)
+    returns = torch.tensor(returns)
+    returns = (returns - returns.mean()) / (returns.std() + 1e-8)  # baseline
+    loss = -(torch.stack(log_probs) * returns).sum()   # maximize E[log pi * G]
+    opt.zero_grad(); loss.backward(); opt.step()
+    return loss.item()
+</code></pre></p>
+<h3 id="86-deep-reinforcement-learning">8.6 Deep reinforcement learning</h3>
+<p>Combining RL with deep networks as function approximators yields <strong>deep RL</strong>. The landmark <strong>Deep Q-Network (DQN)</strong> learned to play Atari games from pixels using a CNN to approximate Q, stabilized by an experience-replay buffer and a target network. <strong>AlphaGo / AlphaZero</strong> combined deep value/policy networks with Monte Carlo tree search to surpass humans at Go, chess, and shogi. Deep RL now drives robotics, recommendation, chip design, and the preference-alignment of generative models.</p>
+<p>DQN&#39;s two stabilizing tricks—experience replay and a slowly-updated target network—are what made deep value learning work:</p>
+<p><pre class="mermaid">flowchart TB
+    ENV[Environment: pixels] --&gt; AGENT[Q-network: CNN -&gt; Q of s,a]
+    AGENT --&gt;|epsilon-greedy action| ENV
+    ENV --&gt; BUF[(Replay buffer&lt;br/&gt;store s,a,r,s')]
+    BUF --&gt;|random minibatch&lt;br/&gt;breaks correlation| TRAIN[Training]
+    TARGET[Target network Q-minus&lt;br/&gt;frozen copy] --&gt;|stable TD target| TRAIN
+    TRAIN --&gt;|gradient step| AGENT
+    AGENT -.periodic copy.-&gt; TARGET
+</pre></p>
+<p><pre class="mermaid">flowchart TD
+    RL[Reinforcement Learning] --&gt; VB[Value-based&lt;br/&gt;Q-learning, DQN]
+    RL --&gt; PB[Policy-based&lt;br/&gt;REINFORCE, PPO]
+    RL --&gt; AC[Actor-Critic&lt;br/&gt;A2C, SAC, DDPG]
+    RL --&gt; MB[Model-based&lt;br/&gt;Dyna, MuZero]
+</pre></p>
+<h3 id="87-challenges-in-rl">8.7 Challenges in RL</h3>
+<p>RL is powerful but notoriously finicky: it is <strong>sample-inefficient</strong> (millions of interactions), sensitive to reward design (<strong>reward hacking</strong> when the proxy reward diverges from intent), unstable to train, and hard to deploy safely in the real world where exploration can be costly or dangerous. <strong>Offline RL</strong> (learning from logged data without further interaction) and <strong>model-based RL</strong> (learning a world model to plan) are active responses to these limits.</p>
+<hr>
+<h2 id="9-deep-learning-the-representation-learning-substrate">9. Deep Learning: The Representation-Learning Substrate</h2>
+<p>Deep learning is not a fifth sibling of the supervisory paradigms above—it is a <strong>model family</strong> (artificial neural networks with many layers) that participates in all of them. Its defining contribution is <strong>representation learning</strong>: rather than hand-engineering features, deep networks learn a hierarchy of features directly from raw data, with each layer composing the representations of the layer below.</p>
+<h3 id="91-from-perceptron-to-multilayer-networks">9.1 From perceptron to multilayer networks</h3>
+<p>The <strong>perceptron</strong> computes \(\hat y = \text{step}(w^\top x + b)\); stacking neurons with nonlinear activations into layers yields the <strong>multilayer perceptron (MLP)</strong>, a universal function approximator. A layer computes</p>
+<p>\[ h^{(l)} = \sigma\big(W^{(l)} h^{(l-1)} + b^{(l)}\big), \]</p>
+<p>where \(\sigma\) is a nonlinearity (ReLU \(\max(0,z)\), GELU, sigmoid, tanh). Without the nonlinearity, stacked linear layers collapse to a single linear map—the nonlinearity is what gives depth its power.</p>
+<h3 id="92-backpropagation-and-gradient-descent">9.2 Backpropagation and gradient descent</h3>
+<p>Networks are trained by <strong>gradient descent</strong> on a loss, with gradients computed efficiently by <strong>backpropagation</strong>—the reverse-mode application of the chain rule that reuses intermediate quantities so the cost of all gradients is comparable to one forward pass. The update is</p>
+<p>\[ \theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}, \]</p>
+<p>in practice using mini-batch <strong>stochastic gradient descent</strong> and adaptive optimizers (Adam, AdamW) (see §14).</p>
+<h3 id="93-the-major-architecture-families">9.3 The major architecture families</h3>
+<p><pre class="mermaid">flowchart TD
+    NN[Neural Networks] --&gt; MLP[MLP&lt;br/&gt;tabular, general]
+    NN --&gt; CNN[CNN&lt;br/&gt;images, grids]
+    NN --&gt; RNN[RNN/LSTM/GRU&lt;br/&gt;sequences]
+    NN --&gt; TR[Transformer&lt;br/&gt;sequences, attention]
+    NN --&gt; GNN[GNN&lt;br/&gt;graphs]
+    NN --&gt; GEN[Generative&lt;br/&gt;VAE, GAN, diffusion]
+</pre></p>
+<ul>
+<li><strong>Convolutional neural networks (CNNs)</strong> exploit spatial locality and translation invariance via shared convolutional filters—dominant in computer vision (LeNet, AlexNet, ResNet).</li>
+<li><strong>Recurrent networks (RNN/LSTM/GRU)</strong> process sequences with a recurrent hidden state; gated variants mitigate vanishing gradients.</li>
+<li><strong>Transformers</strong> replace recurrence with <strong>self-attention</strong>, enabling parallel training and direct long-range interaction; they now underpin language, vision, audio, and multimodal models.</li>
+<li><strong>Graph neural networks (GNNs)</strong> generalize convolution to graph-structured data via message passing.</li>
+<li><strong>Generative models</strong>—VAEs, GANs, normalizing flows, and diffusion models—learn to <em>sample</em> new data.</li>
+</ul>
+<p>The full architectural lineage from the Transformer onward—attention variants, Mixture-of-Experts, state-space models, multimodal and generative systems, scaling laws, and the alignment/serving stack—is the subject of the companion white paper, <em>The Evolution of Deep Learning Architectures Since the Transformer</em> (<code>whitepaper.md</code>). Here we simply situate deep learning as the representation engine that, combined with each supervisory paradigm, produces image classifiers (supervised), pretrained language models (self-supervised), game-playing agents (RL), and generative models (unsupervised).</p>
+<h3 id="94-why-deep-learning-why-now">9.4 Why deep learning, why now</h3>
+<p>Three forces converged: <strong>data</strong> (web-scale corpora and labeled benchmarks like ImageNet), <strong>compute</strong> (GPUs/TPUs offering massive parallelism), and <strong>algorithms</strong> (ReLU, batch/layer normalization, residual connections, attention, better optimizers, and regularizers like dropout). Together they made it possible to train very deep networks reliably, unlocking the performance that reshaped the field after 2012.</p>
+<hr>
+<h2 id="10-cross-cutting-paradigms">10. Cross-Cutting Paradigms</h2>
+<p>The branches in §§4–9 describe <em>what</em> signal drives learning. A separate set of paradigms describes <em>how learning is organized</em>—they can be combined with any branch.</p>
+<h3 id="101-transfer-learning-and-fine-tuning">10.1 Transfer learning and fine-tuning</h3>
+<p>Instead of training from scratch, start from a model pretrained on a large source task and adapt it to a target task with limited data. <strong>Feature extraction</strong> freezes the pretrained backbone and trains only a new head; <strong>fine-tuning</strong> updates some or all weights at a small learning rate. This is now standard practice: pretrain a foundation model once (self-supervised, expensive), then cheaply adapt it to many downstream tasks. <strong>Parameter-efficient fine-tuning</strong> (adapters, <strong>LoRA</strong>, prompt tuning) adapts huge models by updating a tiny fraction of parameters.</p>
+<p><pre class="mermaid">flowchart LR
+    PT[Pretrain on large source&lt;br/&gt;self-supervised] --&gt; FT[Fine-tune on small target&lt;br/&gt;supervised]
+    FT --&gt; D[Deployed task model]
+</pre></p>
+<p>Transfer learning in PyTorch: freeze a pretrained backbone, replace and train only the head.</p>
+<p><pre><code class="language-python">import torch, torch.nn as nn
+from torchvision import models
+
+net = models.resnet18(weights="IMAGENET1K_V1")   # pretrained on 1.2M images
+for p in net.parameters():
+    p.requires_grad = False                       # freeze the backbone
+
+net.fc = nn.Linear(net.fc.in_features, 3)         # new head: 3 target classes
+# only net.fc.parameters() will receive gradients
+opt = torch.optim.Adam(net.fc.parameters(), lr=1e-3)
+trainable = sum(p.numel() for p in net.parameters() if p.requires_grad)
+total = sum(p.numel() for p in net.parameters())
+print(f"training {trainable:,} of {total:,} parameters "
+      f"({100*trainable/total:.2f}%)")
+</code></pre></p>
+<p>The progression from feature-extraction to full fine-tuning to parameter-efficient methods (LoRA) trades adaptation power against cost:</p>
+<p><pre class="mermaid">flowchart LR
+    FE[Feature extraction&lt;br/&gt;freeze all, train head only] --&gt; FT[Fine-tuning&lt;br/&gt;unfreeze top layers]
+    FT --&gt; FULL[Full fine-tuning&lt;br/&gt;update all weights]
+    FE --&gt; PEFT[PEFT / LoRA&lt;br/&gt;train tiny low-rank adapters]
+</pre></p>
+<h3 id="102-multi-task-learning">10.2 Multi-task learning</h3>
+<p>Train one model to perform several related tasks simultaneously, sharing representations across them. Shared structure acts as an inductive bias and a regularizer, often improving each task—especially data-poor ones—through positive transfer. The risk is <strong>negative transfer</strong> when tasks conflict, addressed by task weighting and architectural separation.</p>
+<p>The canonical <strong>hard parameter sharing</strong> architecture: a shared trunk with per-task heads, trained on a weighted sum of task losses \(\mathcal{L}=\sum_t \lambda_t \mathcal{L}_t\).</p>
+<p><pre class="mermaid">flowchart TB
+    X[Input x] --&gt; TRUNK[Shared backbone]
+    TRUNK --&gt; H1[Head A] --&gt; Y1[Task A: classification]
+    TRUNK --&gt; H2[Head B] --&gt; Y2[Task B: regression]
+    TRUNK --&gt; H3[Head C] --&gt; Y3[Task C: segmentation]
+    Y1 --&gt; L[Weighted total loss]
+    Y2 --&gt; L
+    Y3 --&gt; L
+</pre></p>
+<h3 id="103-meta-learning-learning-to-learn">10.3 Meta-learning (&quot;learning to learn&quot;)</h3>
+<p>Meta-learning trains models that adapt rapidly to new tasks from few examples by learning <em>across a distribution of tasks</em>. <strong>Metric-based</strong> methods (Siamese, prototypical, matching networks) learn an embedding where classification reduces to nearest-prototype. <strong>Optimization-based</strong> methods like <strong>MAML</strong> learn an initialization from which a few gradient steps solve a new task. This is the backbone of <strong>few-shot learning</strong>.</p>
+<h3 id="104-online-and-continual-learning">10.4 Online and continual learning</h3>
+<p><strong>Online learning</strong> updates the model one example (or mini-batch) at a time as data stream in—essential when data are too large to store or are non-stationary. <strong>Continual (lifelong) learning</strong> extends this to a sequence of <em>tasks</em>, with the central challenge of <strong>catastrophic forgetting</strong>: learning new tasks erodes old knowledge. Remedies include regularization (EWC), replay buffers, and dynamic architectures.</p>
+<h3 id="105-active-learning">10.5 Active learning</h3>
+<p>When labeling is expensive, the learner <em>chooses</em> which examples to label, querying the most informative points (by uncertainty, expected model change, or disagreement among a committee). A well-designed active learner reaches target accuracy with far fewer labels than random sampling.</p>
+<p><pre class="mermaid">flowchart LR
+    M[Model] --&gt;|query most informative| O[Oracle / human labeler]
+    O --&gt;|new labels| P[Pool of unlabeled data]
+    P --&gt; M
+</pre></p>
+<h3 id="106-federated-learning">10.6 Federated learning</h3>
+<p>Train a shared model across many decentralized devices or institutions <strong>without</strong> centralizing the raw data—crucial for privacy-sensitive domains (mobile keyboards, healthcare). Devices compute local updates that are aggregated (e.g., <strong>FedAvg</strong>) into a global model. It introduces challenges of communication efficiency, non-IID data across clients, and privacy (often combined with differential privacy and secure aggregation).</p>
+<p>The <strong>FedAvg</strong> round—broadcast, train locally, average weights—captured in pseudocode:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def fed_avg(global_w, client_datasets, local_train, n_rounds=10):
+    for _ in range(n_rounds):
+        updates, sizes = [], []
+        for data in client_datasets:               # runs on each device
+            w_local = local_train(global_w.copy(), data)   # raw data never leaves
+            updates.append(w_local)
+            sizes.append(len(data))
+        # weighted average of client models (data stays local; only weights move)
+        total = sum(sizes)
+        global_w = sum(s / total * w for s, w in zip(sizes, updates))
+    return global_w
+</code></pre></p>
+<p><pre class="mermaid">flowchart TB
+    SERVER[Server: global model w] --&gt;|broadcast w| C1[Client 1&lt;br/&gt;local data]
+    SERVER --&gt;|broadcast w| C2[Client 2&lt;br/&gt;local data]
+    SERVER --&gt;|broadcast w| C3[Client 3&lt;br/&gt;local data]
+    C1 --&gt;|w1 update only| AGG[Weighted average]
+    C2 --&gt;|w2 update only| AGG
+    C3 --&gt;|w3 update only| AGG
+    AGG --&gt;|new global w| SERVER
+</pre></p>
+<h3 id="107-ensemble-learning-as-a-paradigm">10.7 Ensemble learning as a paradigm</h3>
+<p>Beyond the tree ensembles of §4.6, ensembling is a general principle: combine diverse models (bagging, boosting, <strong>stacking</strong>, model averaging) to reduce variance and improve robustness. Stacking trains a meta-model on the predictions of base models; deep ensembles average several independently trained networks and also yield useful uncertainty estimates.</p>
+<table>
+<thead>
+<tr>
+<th>Paradigm</th>
+<th>Core idea</th>
+<th>Solves</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transfer learning</td>
+<td>Reuse pretrained knowledge</td>
+<td>Scarce target labels</td>
+</tr>
+<tr>
+<td>Multi-task learning</td>
+<td>Share representation across tasks</td>
+<td>Data efficiency, regularization</td>
+</tr>
+<tr>
+<td>Meta-learning</td>
+<td>Learn to adapt quickly</td>
+<td>Few-shot tasks</td>
+</tr>
+<tr>
+<td>Online/continual</td>
+<td>Update from a stream</td>
+<td>Non-stationarity, forgetting</td>
+</tr>
+<tr>
+<td>Active learning</td>
+<td>Query informative labels</td>
+<td>Expensive labeling</td>
+</tr>
+<tr>
+<td>Federated learning</td>
+<td>Train without moving data</td>
+<td>Privacy, decentralization</td>
+</tr>
+<tr>
+<td>Ensembles</td>
+<td>Combine diverse models</td>
+<td>Variance, robustness, uncertainty</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="11-the-machine-learning-lifecycle">11. The Machine Learning Lifecycle</h2>
+<p>Algorithms are a fraction of a real ML system. The end-to-end workflow—often summarized as <strong>CRISP-DM</strong> or in MLOps terms—dominates the engineering effort.</p>
+<p><pre class="mermaid">flowchart LR
+    P[Problem framing] --&gt; D[Data collection]
+    D --&gt; C[Cleaning &amp; EDA]
+    C --&gt; F[Feature engineering]
+    F --&gt; M[Model selection &amp; training]
+    M --&gt; T[Tuning &amp; validation]
+    T --&gt; E[Evaluation]
+    E --&gt; DEP[Deployment]
+    DEP --&gt; MON[Monitoring]
+    MON --&gt;|drift / new data| D
+</pre></p>
+<h3 id="111-problem-framing">11.1 Problem framing</h3>
+<p>Decide whether ML is warranted, define the task (regression vs classification vs ranking…), choose a performance metric aligned with business value, and establish a baseline. Misframing here invalidates everything downstream.</p>
+<h3 id="112-data-collection-cleaning-and-eda">11.2 Data collection, cleaning, and EDA</h3>
+<p>Real data are messy: missing values, duplicates, outliers, inconsistent units, label noise, and leakage. <strong>Exploratory data analysis (EDA)</strong> profiles distributions and relationships. <strong>Data leakage</strong>—when information unavailable at prediction time sneaks into training—is the most common cause of models that look great offline and fail in production; guard against it ruthlessly. Address class imbalance (resampling, class weights) and split data into train/validation/test <em>before</em> fitting any preprocessing.</p>
+<h3 id="113-feature-engineering">11.3 Feature engineering</h3>
+<p>For tabular data this is often where accuracy is won: encoding categoricals (one-hot, target encoding), scaling numerics (standardization, normalization), handling missingness, creating interactions and domain features, and dimensionality reduction. Deep learning automates much feature learning for perceptual data, but feature engineering remains decisive for structured data.</p>
+<h3 id="114-model-selection-and-hyperparameter-tuning">11.4 Model selection and hyperparameter tuning</h3>
+<p>Distinguish <strong>parameters</strong> (learned from data, e.g., weights) from <strong>hyperparameters</strong> (set before training, e.g., learning rate, tree depth, \(\lambda\)). Tune hyperparameters with <strong>cross-validation</strong> using grid search, random search, or <strong>Bayesian optimization</strong> (and bandit methods like Hyperband). The golden rule: the <strong>test set is touched once</strong>, at the very end—all tuning uses the validation folds, or selection bias inflates your reported numbers.</p>
+<p>A leakage-safe pipeline that bundles preprocessing with the model and tunes hyperparameters inside cross-validation (so the scaler is fit only on training folds):</p>
+<p><pre><code class="language-python">from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+from sklearn.datasets import load_wine
+
+X, y = load_wine(return_X_y=True)
+pipe = Pipeline([("scaler", StandardScaler()), ("svm", SVC())])
+grid = {"svm__C": [0.1, 1, 10], "svm__gamma": [0.01, 0.1, 1]}
+
+search = GridSearchCV(pipe, grid, cv=5, scoring="accuracy")
+search.fit(X, y)
+print("best params:", search.best_params_)
+print(f"best CV accuracy: {search.best_score_:.3f}")
+</code></pre></p>
+<p>k-fold cross-validation partitions the training data into k folds, training on k-1 and validating on the held-out fold, rotating through all folds and averaging:</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph 5-Fold CV
+        F1[Fold1 val] --- F2[Fold2 train] --- F3[Fold3 train] --- F4[Fold4 train] --- F5[Fold5 train]
+    end
+</pre></p>
+<h3 id="115-deployment-and-mlops">11.5 Deployment and MLOps</h3>
+<p>Shipping a model means serving it (batch or real-time API), versioning data and models, ensuring reproducibility, and <strong>monitoring</strong> for <strong>data drift</strong> (input distribution changes) and <strong>concept drift</strong> (the input–output relationship changes). When metrics degrade, retrain. This operational discipline—CI/CD for models, feature stores, experiment tracking, observability—is <strong>MLOps</strong>, and it is where most ML projects succeed or fail.</p>
+<p><pre class="mermaid">flowchart LR
+    subgraph CI[CI/CD pipeline]
+        CODE[Code + data version] --&gt; TRAIN[Automated training]
+        TRAIN --&gt; TEST[Validation gates]
+        TEST --&gt; REG[Model registry]
+    end
+    REG --&gt; DEPLOY[Deploy: API / batch / edge]
+    DEPLOY --&gt; SERVE[Serving + feature store]
+    SERVE --&gt; MONITOR[Monitor: latency, drift, accuracy]
+    MONITOR --&gt;|alert / threshold breach| RETRAIN[Trigger retraining]
+    RETRAIN --&gt; TRAIN
+</pre></p>
+<p>A simple but production-relevant drift check—compare the live feature distribution to the training distribution with a statistical test:</p>
+<p><pre><code class="language-python">import numpy as np
+from scipy.stats import ks_2samp
+
+def detect_drift(reference, live, alpha=0.05):
+    """Per-feature Kolmogorov-Smirnov test; flag features whose dist shifted."""
+    drift = {}
+    for j in range(reference.shape[1]):
+        stat, p = ks_2samp(reference[:, j], live[:, j])
+        drift[j] = {"ks": round(stat, 3), "p": round(p, 4), "drift": p &lt; alpha}
+    return drift
+
+rng = np.random.default_rng(0)
+ref = rng.normal(0, 1, (1000, 3))
+live = np.column_stack([rng.normal(0, 1, 1000),       # stable
+                        rng.normal(1.5, 1, 1000),     # shifted mean -&gt; drift
+                        rng.normal(0, 1, 1000)])
+for feat, info in detect_drift(ref, live).items():
+    print(f"feature {feat}: {info}")
+</code></pre></p>
+<hr>
+<h2 id="12-model-evaluation-and-metrics">12. Model Evaluation and Metrics</h2>
+<p>Choosing the right metric is as important as choosing the right model; a model &quot;improves&quot; only relative to a metric, and the wrong metric optimizes the wrong thing.</p>
+<h3 id="121-regression-metrics">12.1 Regression metrics</h3>
+<p>\[ \text{MSE} = \tfrac{1}{n}\sum (y_i-\hat y_i)^2,\quad \text{RMSE}=\sqrt{\text{MSE}},\quad \text{MAE}=\tfrac{1}{n}\sum|y_i-\hat y_i|, \]</p>
+<p>\[ R^2 = 1 - \frac{\sum(y_i-\hat y_i)^2}{\sum(y_i-\bar y)^2}. \]</p>
+<p>RMSE penalizes large errors more (sensitive to outliers); MAE is robust; \(R^2\) reports the fraction of variance explained.</p>
+<h3 id="122-classification-metrics-and-the-confusion-matrix">12.2 Classification metrics and the confusion matrix</h3>
+<p>From the counts of true/false positives/negatives:</p>
+<p>\[ \text{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN},\quad \text{Precision}=\frac{TP}{TP+FP},\quad \text{Recall}=\frac{TP}{TP+FN}, \]</p>
+<p>\[ F_1 = 2\cdot\frac{\text{Precision}\cdot\text{Recall}}{\text{Precision}+\text{Recall}}. \]</p>
+<p><strong>Accuracy is misleading under class imbalance</strong> (99% accuracy is trivial if 99% of cases are negative). Precision (of those flagged, how many are right) and recall (of the true positives, how many were caught) trade off; the right balance is domain-specific—recall matters for cancer screening, precision for spam filtering. The <strong>ROC curve</strong> plots true-positive vs false-positive rate across thresholds, summarized by <strong>AUC</strong>; the <strong>precision–recall curve</strong> is preferred under heavy imbalance. <strong>Log loss</strong> and <strong>calibration</strong> matter when probabilities, not just labels, are used downstream.</p>
+<p><pre class="mermaid">flowchart TD
+    subgraph Confusion Matrix
+        TP[True Positive] 
+        FP[False Positive]
+        FN[False Negative]
+        TN[True Negative]
+    end
+</pre></p>
+<p>Computing the full metric suite, including the ROC curve and AUC, on a realistic imbalanced problem:</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (confusion_matrix, classification_report,
+                             roc_auc_score, average_precision_score)
+
+X, y = make_classification(n_samples=5000, weights=[0.95, 0.05],  # 5% positives
+                           n_informative=6, random_state=0)
+Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.3, stratify=y,
+                                      random_state=0)
+clf = LogisticRegression(max_iter=1000, class_weight="balanced").fit(Xtr, ytr)
+proba = clf.predict_proba(Xte)[:, 1]
+pred = (proba &gt; 0.5).astype(int)
+
+print("confusion matrix [[TN FP],[FN TP]]:\n", confusion_matrix(yte, pred))
+print(classification_report(yte, pred, digits=3))
+print(f"ROC-AUC = {roc_auc_score(yte, proba):.3f}")
+print(f"PR-AUC  = {average_precision_score(yte, proba):.3f}  "
+      f"(more informative than accuracy under imbalance)")
+</code></pre></p>
+<p><pre class="mermaid">flowchart LR
+    subgraph ROC[ROC curve concept]
+        ORIGIN[0,0] --&gt; CURVE[Sweep threshold from 1 to 0]
+        CURVE --&gt; CORNER[Toward top-left = perfect]
+        CORNER --&gt; DIAG[Diagonal = random chance]
+    end
+    AUC[AUC = area under ROC&lt;br/&gt;0.5 chance, 1.0 perfect]
+</pre></p>
+<h3 id="123-clustering-and-ranking-metrics">12.3 Clustering and ranking metrics</h3>
+<p>Clustering uses internal measures (<strong>silhouette</strong>, Davies–Bouldin) when labels are absent and external measures (adjusted Rand index, normalized mutual information) when ground truth exists. Ranking/recommendation uses <strong>precision@k</strong>, <strong>NDCG</strong>, and <strong>MAP</strong>.</p>
+<h3 id="124-honest-evaluation">12.4 Honest evaluation</h3>
+<p>Always report on a held-out test set drawn from the deployment distribution, include confidence intervals or multiple seeds, compare against a sensible baseline, and watch for <strong>benchmark contamination</strong> (test data leaking into training)—a growing problem for models trained on web-scale corpora.</p>
+<hr>
+<h2 id="13-learning-theory-and-generalization">13. Learning Theory and Generalization</h2>
+<p>Why does minimizing error on a finite sample tell us anything about unseen data? Statistical learning theory answers this.</p>
+<h3 id="131-pac-learning">13.1 PAC learning</h3>
+<p>The <strong>Probably Approximately Correct (PAC)</strong> framework (Valiant, 1984) formalizes learnability: a hypothesis class is PAC-learnable if, for any error \(\epsilon\) and confidence \(\delta\), a polynomial number of samples suffices to find (with probability \(\ge 1-\delta\)) a hypothesis with error \(\le \epsilon\). It makes sample complexity precise.</p>
+<h3 id="132-vc-dimension-and-capacity">13.2 VC dimension and capacity</h3>
+<p>The <strong>Vapnik–Chervonenkis (VC) dimension</strong> measures the capacity of a hypothesis class as the size of the largest set of points it can <strong>shatter</strong> (label in all possible ways). Generalization bounds take the schematic form</p>
+<p>\[ R(f) \le \hat R(f) + O\left(\sqrt{\frac{h(\log(n/h)+1) + \log(1/\delta)}{n}}\right), \]</p>
+<p>where h is the VC dimension. The message: test error is bounded by training error plus a complexity term that grows with capacity h and shrinks with data n. This is the formal backbone of the bias–variance/regularization story.</p>
+<h3 id="133-the-double-descent-surprise">13.3 The double-descent surprise</h3>
+<p>Classical theory predicts a U-shaped test-error curve in model capacity. Modern over-parameterized models violate this: as capacity grows <em>past</em> the interpolation threshold (where training error hits zero), test error can <strong>decrease again</strong>—the <strong>double-descent</strong> phenomenon. It explains why enormous neural networks generalize despite having far more parameters than data points, and it remains an active area reconciling classical theory with deep-learning practice. Related, the <strong>lottery-ticket hypothesis</strong> and <strong>implicit regularization</strong> of SGD help explain why over-parameterized models find generalizing solutions.</p>
+<p><pre class="mermaid">flowchart LR
+    A[Underparameterized&lt;br/&gt;U-shaped classical regime] --&gt; B[Interpolation threshold&lt;br/&gt;peak error]
+    B --&gt; C[Overparameterized&lt;br/&gt;second descent]
+</pre></p>
+<p>A learning curve—test error vs training-set size—is the practical diagnostic that distinguishes high bias (curves converge to a high error: get a better model) from high variance (a wide train/test gap: get more data):</p>
+<p><pre><code class="language-python">import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import learning_curve
+from sklearn.datasets import make_classification
+
+X, y = make_classification(n_samples=3000, n_features=20, random_state=0)
+sizes, train_scores, val_scores = learning_curve(
+    RandomForestClassifier(n_estimators=100), X, y,
+    train_sizes=np.linspace(0.1, 1.0, 5), cv=5)
+
+for n, tr, va in zip(sizes, train_scores.mean(1), val_scores.mean(1)):
+    print(f"n_train={int(n):4d}  train_acc={tr:.3f}  val_acc={va:.3f}  "
+          f"gap={tr-va:.3f}")
+# Large persistent gap -&gt; variance (more data helps).
+# Both low and close -&gt; bias (need a richer model / features).
+</code></pre></p>
+<p><pre class="mermaid">flowchart TB
+    LC[Learning curve diagnosis] --&gt; HB{Train and val both&lt;br/&gt;plateau at high error?}
+    HB --&gt;|yes| BIAS[High bias / underfit&lt;br/&gt;-&gt; richer model, more features]
+    HB --&gt;|no| HV{Large train-val gap?}
+    HV --&gt;|yes| VAR[High variance / overfit&lt;br/&gt;-&gt; more data, regularize]
+    HV --&gt;|no| GOOD[Well-balanced model]
+</pre></p>
+<h3 id="134-no-free-lunch">13.4 No free lunch</h3>
+<p>The <strong>No Free Lunch theorem</strong> states that, averaged over all possible problems, no learning algorithm is superior to any other. Practically: there is no universally best model—performance comes from matching a method&#39;s inductive bias to the structure of the problem. This justifies the diversity of branches surveyed here.</p>
+<hr>
+<h2 id="14-optimization-for-machine-learning">14. Optimization for Machine Learning</h2>
+<p>Nearly every ML method reduces to optimizing an objective. The dominant tool is <strong>gradient descent</strong> and its variants.</p>
+<h3 id="141-gradient-descent-and-its-mini-batch-variants">14.1 Gradient descent and its mini-batch variants</h3>
+<p>Full-batch gradient descent uses all data per step—accurate but expensive. <strong>Stochastic gradient descent (SGD)</strong> uses one example; <strong>mini-batch SGD</strong> uses a small batch, the practical default, balancing noise and efficiency:</p>
+<p>\[ \theta_{t+1} = \theta_t - \eta\nabla_\theta \mathcal{L}_{\text{batch}}(\theta_t). \]</p>
+<p>The <strong>learning rate</strong> \(\eta\) is the most important hyperparameter; schedules (step decay, cosine annealing, warmup) and <strong>momentum</strong> (accumulating a velocity term) accelerate convergence and smooth noisy gradients.</p>
+<p><pre class="mermaid">flowchart LR
+    BATCH[Batch GD&lt;br/&gt;all n, exact, slow] --&gt; MINI[Mini-batch GD&lt;br/&gt;noisy but efficient: default]
+    SGD[SGD&lt;br/&gt;1 example, very noisy] --&gt; MINI
+    MINI --&gt; MOM[+ Momentum&lt;br/&gt;velocity smooths path]
+    MOM --&gt; ADA[+ Adaptive LR&lt;br/&gt;Adam/AdamW]
+</pre></p>
+<p>Mini-batch gradient descent with momentum, from scratch, on a convex objective:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def sgd_momentum(grad_fn, w0, lr=0.05, beta=0.9, steps=200, batches=None):
+    w = w0.copy()
+    v = np.zeros_like(w)
+    for t in range(steps):
+        g = grad_fn(w, t)
+        v = beta * v + (1 - beta) * g     # exponential moving average of grads
+        w = w - lr * v                    # step along the smoothed direction
+    return w
+
+# Minimize f(w) = ||Aw - b||^2 ; grad = 2 A^T (A w - b)
+rng = np.random.default_rng(0)
+A = rng.normal(size=(100, 5)); b = rng.normal(size=100)
+grad = lambda w, t: 2 * A.T @ (A @ w - b)
+w = sgd_momentum(grad, np.zeros(5))
+print("solution:", w.round(3))
+print("vs lstsq :", np.linalg.lstsq(A, b, rcond=None)[0].round(3))
+</code></pre></p>
+<h3 id="142-adaptive-optimizers">14.2 Adaptive optimizers</h3>
+<p><strong>AdaGrad</strong>, <strong>RMSProp</strong>, and <strong>Adam</strong> adapt a per-parameter learning rate from running statistics of the gradients. Adam combines momentum with RMSProp-style scaling:</p>
+<p>\[ m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t,\quad v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2,\quad \theta_{t+1} = \theta_t - \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}. \]</p>
+<p><strong>AdamW</strong> decouples weight decay from the gradient update and is the standard for training large neural networks.</p>
+<p>Adam from scratch—momentum (first moment) plus per-parameter scaling (second moment), with bias correction:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def adam(grad_fn, w0, lr=0.01, b1=0.9, b2=0.999, eps=1e-8, steps=500):
+    w = w0.copy()
+    m = np.zeros_like(w)        # 1st moment (mean of grads)
+    v = np.zeros_like(w)        # 2nd moment (uncentered variance)
+    for t in range(1, steps + 1):
+        g = grad_fn(w)
+        m = b1 * m + (1 - b1) * g
+        v = b2 * v + (1 - b2) * g ** 2
+        m_hat = m / (1 - b1 ** t)        # bias correction
+        v_hat = v / (1 - b2 ** t)
+        w -= lr * m_hat / (np.sqrt(v_hat) + eps)
+    return w
+
+rng = np.random.default_rng(0)
+A = rng.normal(size=(100, 5)); b = rng.normal(size=100)
+w = adam(lambda w: 2 * A.T @ (A @ w - b), np.zeros(5))
+print("Adam solution:", w.round(3))
+</code></pre></p>
+<h3 id="143-convexity-and-the-loss-landscape">14.3 Convexity and the loss landscape</h3>
+<p>For <strong>convex</strong> objectives (linear/logistic regression, SVMs), gradient methods reach the global optimum. Deep networks are <strong>non-convex</strong>, with many local minima and saddle points—yet SGD reliably finds solutions that generalize well, a phenomenon partly explained by the geometry of high-dimensional loss surfaces (most critical points are saddles, and wide/flat minima generalize better than sharp ones).</p>
+<h3 id="144-practical-training-stability">14.4 Practical training stability</h3>
+<p>Techniques that make optimization tractable at scale: <strong>normalization</strong> (batch, layer, RMS) to stabilize activations; <strong>residual connections</strong> to ease gradient flow; <strong>gradient clipping</strong> to prevent explosions; <strong>mixed-precision</strong> training for speed; and <strong>regularizers</strong> (weight decay, dropout, early stopping, data augmentation) to control overfitting. These are detailed for the Transformer era in the companion deep-learning paper.</p>
+<hr>
+<h2 id="15-challenges-ethics-and-responsible-ml">15. Challenges, Ethics, and Responsible ML</h2>
+<p>As ML moves from research into consequential decisions—credit, hiring, healthcare, justice—its limitations become societal risks, not just engineering nuisances.</p>
+<h3 id="151-data-efficiency-and-quality">15.1 Data efficiency and quality</h3>
+<p>State-of-the-art models are data-hungry, yet labeled data are scarce and biased. &quot;Garbage in, garbage out&quot; is the field&#39;s oldest law: models inherit the errors, gaps, and prejudices of their training data. Self-supervised pretraining, transfer learning, and synthetic data help, but data quality remains the dominant lever on real-world performance.</p>
+<h3 id="152-distribution-shift-and-robustness">15.2 Distribution shift and robustness</h3>
+<p>Models assume the deployment distribution matches training. When it does not—<strong>covariate shift</strong>, <strong>concept drift</strong>, adversarial inputs—performance silently degrades. <strong>Adversarial examples</strong> (imperceptible perturbations that flip predictions) reveal that even accurate models can be brittle. Robustness, out-of-distribution detection, and continual monitoring are essential for safety-critical use.</p>
+<h3 id="153-interpretability-and-explainability">15.3 Interpretability and explainability</h3>
+<p>Many high-performing models (deep nets, large ensembles) are <strong>black boxes</strong>. Interpretability methods—feature importance, <strong>SHAP</strong>, <strong>LIME</strong>, attention visualization, counterfactuals—help explain predictions, which is increasingly a legal requirement (e.g., the &quot;right to explanation&quot;). There is often a tension between accuracy and interpretability; in regulated domains, a slightly less accurate but explainable model may be the responsible choice.</p>
+<h3 id="154-fairness-and-bias">15.4 Fairness and bias</h3>
+<p>ML can encode and amplify societal bias. A model trained on historical hiring data may learn to discriminate; one trained on unrepresentative populations may underperform for minorities. Fairness has multiple, sometimes mutually incompatible, mathematical definitions (demographic parity, equalized odds, individual fairness). Mitigation spans the lifecycle: representative data, fairness constraints during training, and post-hoc auditing. Crucially, fairness is a sociotechnical problem—statistics alone cannot define what is just.</p>
+<p>Two common group-fairness metrics, computed directly so the definitions are unambiguous:</p>
+<p><pre><code class="language-python">import numpy as np
+
+def fairness_metrics(y_true, y_pred, group):
+    """group: binary protected attribute (0/1)."""
+    g0, g1 = group == 0, group == 1
+    # Demographic parity: equal positive-prediction rate across groups
+    dp_diff = y_pred[g1].mean() - y_pred[g0].mean()
+    # Equal opportunity: equal true-positive rate across groups
+    tpr = lambda m: y_pred[m &amp; (y_true == 1)].mean()
+    eo_diff = tpr(g1) - tpr(g0)
+    return {"demographic_parity_diff": round(dp_diff, 3),
+            "equal_opportunity_diff": round(eo_diff, 3)}
+
+rng = np.random.default_rng(0)
+n = 2000
+group = rng.integers(0, 2, n)
+y_true = rng.integers(0, 2, n)
+# A biased model that approves group 1 more often:
+y_pred = ((rng.random(n) &lt; np.where(group == 1, 0.6, 0.3))).astype(int)
+print(fairness_metrics(y_true, y_pred, group))  # both diffs far from 0 =&gt; unfair
+</code></pre></p>
+<p>A value near 0 indicates parity; values far from 0 flag disparate treatment that warrants investigation. Note these definitions can conflict—you generally cannot satisfy all of them at once (an impossibility result), so the choice is a value judgment, not a technical one.</p>
+<h3 id="155-privacy">15.5 Privacy</h3>
+<p>Models can <strong>memorize and leak</strong> training data (membership-inference and extraction attacks). <strong>Differential privacy</strong> provides formal guarantees by adding calibrated noise; <strong>federated learning</strong> keeps data decentralized; both trade some accuracy for protection. For personal and regulated data this is non-negotiable.</p>
+<h3 id="156-environmental-and-economic-cost">15.6 Environmental and economic cost</h3>
+<p>Training large models consumes substantial energy and compute, concentrating capability among well-resourced actors. Efficiency research (quantization, distillation, sparse models) and reporting of compute/carbon costs are part of responsible practice.</p>
+<h3 id="157-safety-and-alignment-of-capable-systems">15.7 Safety and alignment of capable systems</h3>
+<p>As generative and agentic systems grow more capable, ensuring they do what users <em>intend</em> (not merely what was literally specified) becomes central: <strong>reward hacking</strong>, <strong>specification gaming</strong>, hallucination, jailbreaks, and prompt injection are concrete failure modes. Alignment techniques (RLHF, DPO, constitutional methods) and rigorous evaluation aim to close the gap between benchmark performance and real-world reliability—an open and pressing problem.</p>
+<p><pre class="mermaid">flowchart TD
+    R[Responsible ML] --&gt; F[Fairness &amp; non-discrimination]
+    R --&gt; P[Privacy]
+    R --&gt; I[Interpretability]
+    R --&gt; S[Safety &amp; robustness]
+    R --&gt; A[Accountability &amp; governance]
+    R --&gt; E[Environmental cost]
+</pre></p>
+<hr>
+<h2 id="16-future-directions-and-conclusion">16. Future Directions and Conclusion</h2>
+<p>Several threads are shaping the next phase of the field:</p>
+<ul>
+<li><strong>Foundation models and generalists.</strong> Large self-supervised models pretrained once and adapted everywhere are consolidating many tasks into single systems, blurring the boundaries between the branches surveyed here.</li>
+<li><strong>Data-centric and efficient ML.</strong> Attention is shifting from ever-larger models to better data and to doing more with less—distillation, quantization, sparse and small models, and on-device learning.</li>
+<li><strong>Multimodal and embodied learning.</strong> Unifying text, vision, audio, and action; RL and world models for agents that perceive and act.</li>
+<li><strong>Reasoning and test-time compute.</strong> Allocating more computation at inference to &quot;think,&quot; narrowing the gap between pattern matching and reliable reasoning.</li>
+<li><strong>Causality.</strong> Moving beyond correlation toward causal inference for robustness, fairness, and decision-making under intervention.</li>
+<li><strong>Trustworthy ML.</strong> Interpretability, fairness, privacy, robustness, and alignment maturing from research topics into engineering and regulatory requirements.</li>
+<li><strong>Neuro-symbolic and hybrid systems.</strong> Combining the pattern-recognition strength of neural networks with the precision and verifiability of symbolic reasoning.</li>
+</ul>
+<p><pre class="mermaid">flowchart LR
+    PAST[Past: hand-crafted features&lt;br/&gt;task-specific models] --&gt; NOW[Present: foundation models&lt;br/&gt;pretrain once, adapt everywhere]
+    NOW --&gt; FUT[Emerging: multimodal, agentic,&lt;br/&gt;reasoning, data-efficient]
+    FUT --&gt; TRUST[Cross-cutting: trustworthy ML&lt;br/&gt;fairness, privacy, robustness, alignment]
+</pre></p>
+<p><strong>Conclusion.</strong> Machine learning is best understood not as a single technique but as a <em>family of paradigms</em>—supervised, unsupervised, semi-supervised, self-supervised, and reinforcement learning—realized through a shared mathematical core (hypothesis spaces, loss functions, risk minimization, generalization) and an overlapping toolkit of model families (linear, kernel, tree, probabilistic, neural). Deep learning cuts across all of them as a representation-learning substrate, and a second set of paradigms (transfer, multi-task, meta, online, active, federated, ensemble) organizes how learning is deployed. The branches are not competitors but complementary tools, each suited to a different shape of problem and a different availability of supervision. As the field&#39;s capabilities compound, the decisive questions are shifting from &quot;can we?&quot; to &quot;should we, and how responsibly?&quot;—making the theory, the lifecycle discipline, and the ethics covered here as important as the algorithms themselves.</p>
+<hr>
+<h2 id="17-references">17. References</h2>
+<p>This is a curated, representative bibliography of foundational and survey works across the branches; it is illustrative rather than exhaustive.</p>
+<p><strong>Foundations and texts</strong></p>
+<ul>
+<li>Mitchell, T. (1997). <em>Machine Learning.</em> McGraw-Hill.</li>
+<li>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning</em> (2nd ed.). Springer.</li>
+<li>Bishop, C. (2006). <em>Pattern Recognition and Machine Learning.</em> Springer.</li>
+<li>Murphy, K. (2022). <em>Probabilistic Machine Learning: An Introduction.</em> MIT Press.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning.</em> MIT Press.</li>
+<li>Shalev-Shwartz, S., &amp; Ben-David, S. (2014). <em>Understanding Machine Learning: From Theory to Algorithms.</em> Cambridge.</li>
+</ul>
+<p><strong>Supervised learning</strong></p>
+<ul>
+<li>Cortes, C., &amp; Vapnik, V. (1995). Support-vector networks. <em>Machine Learning.</em></li>
+<li>Breiman, L. (2001). Random forests. <em>Machine Learning.</em></li>
+<li>Friedman, J. (2001). Greedy function approximation: a gradient boosting machine. <em>Annals of Statistics.</em></li>
+<li>Chen, T., &amp; Guestrin, C. (2016). XGBoost: A scalable tree boosting system. <em>KDD.</em></li>
+<li>Tibshirani, R. (1996). Regression shrinkage and selection via the lasso. <em>JRSS B.</em></li>
+</ul>
+<p><strong>Unsupervised learning</strong></p>
+<ul>
+<li>Lloyd, S. (1982). Least squares quantization in PCM. <em>IEEE Trans. Inf. Theory.</em></li>
+<li>Dempster, A., Laird, N., &amp; Rubin, D. (1977). Maximum likelihood from incomplete data via the EM algorithm. <em>JRSS B.</em></li>
+<li>Ester, M., et al. (1996). A density-based algorithm for discovering clusters (DBSCAN). <em>KDD.</em></li>
+<li>Jolliffe, I. (2002). <em>Principal Component Analysis.</em> Springer.</li>
+<li>van der Maaten, L., &amp; Hinton, G. (2008). Visualizing data using t-SNE. <em>JMLR.</em></li>
+<li>McInnes, L., Healy, J., &amp; Melville, J. (2018). UMAP. <em>arXiv:1802.03426.</em></li>
+</ul>
+<p><strong>Semi- and self-supervised learning</strong></p>
+<ul>
+<li>Chapelle, O., Schölkopf, B., &amp; Zien, A. (2006). <em>Semi-Supervised Learning.</em> MIT Press.</li>
+<li>Sohn, K., et al. (2020). FixMatch. <em>NeurIPS.</em></li>
+<li>Chen, T., et al. (2020). SimCLR: A simple framework for contrastive learning. <em>ICML.</em></li>
+<li>He, K., et al. (2020). Momentum contrast (MoCo). <em>CVPR.</em></li>
+<li>Grill, J.-B., et al. (2020). Bootstrap Your Own Latent (BYOL). <em>NeurIPS.</em></li>
+<li>Devlin, J., et al. (2019). BERT. <em>NAACL.</em></li>
+</ul>
+<p><strong>Reinforcement learning</strong></p>
+<ul>
+<li>Sutton, R., &amp; Barto, A. (2018). <em>Reinforcement Learning: An Introduction</em> (2nd ed.). MIT Press.</li>
+<li>Watkins, C., &amp; Dayan, P. (1992). Q-learning. <em>Machine Learning.</em></li>
+<li>Mnih, V., et al. (2015). Human-level control through deep reinforcement learning (DQN). <em>Nature.</em></li>
+<li>Schulman, J., et al. (2017). Proximal Policy Optimization. <em>arXiv:1707.06347.</em></li>
+<li>Silver, D., et al. (2017). Mastering the game of Go without human knowledge (AlphaGo Zero). <em>Nature.</em></li>
+</ul>
+<p><strong>Deep learning and cross-cutting paradigms</strong></p>
+<ul>
+<li>LeCun, Y., Bengio, Y., &amp; Hinton, G. (2015). Deep learning. <em>Nature.</em></li>
+<li>Krizhevsky, A., Sutskever, I., &amp; Hinton, G. (2012). ImageNet classification with deep CNNs (AlexNet). <em>NeurIPS.</em></li>
+<li>Vaswani, A., et al. (2017). Attention is all you need. <em>NeurIPS.</em></li>
+<li>Finn, C., Abbeel, P., &amp; Levine, S. (2017). Model-agnostic meta-learning (MAML). <em>ICML.</em></li>
+<li>McMahan, B., et al. (2017). Communication-efficient learning of deep networks from decentralized data (FedAvg). <em>AISTATS.</em></li>
+</ul>
+<p><strong>Theory, optimization, and responsible ML</strong></p>
+<ul>
+<li>Valiant, L. (1984). A theory of the learnable. <em>CACM.</em></li>
+<li>Vapnik, V. (1998). <em>Statistical Learning Theory.</em> Wiley.</li>
+<li>Kingma, D., &amp; Ba, J. (2015). Adam: A method for stochastic optimization. <em>ICLR.</em></li>
+<li>Belkin, M., et al. (2019). Reconciling modern ML practice and the bias–variance trade-off (double descent). <em>PNAS.</em></li>
+<li>Goodfellow, I., Shlens, J., &amp; Szegedy, C. (2015). Explaining and harnessing adversarial examples. <em>ICLR.</em></li>
+<li>Dwork, C., &amp; Roth, A. (2014). The algorithmic foundations of differential privacy. <em>FnT TCS.</em></li>
+<li>Mehrabi, N., et al. (2021). A survey on bias and fairness in machine learning. <em>ACM Computing Surveys.</em></li>
+</ul>
+<p><strong>Companion paper</strong></p>
+<ul>
+<li><em>The Evolution of Deep Learning Architectures Since the Transformer</em> (see <code>whitepaper.md</code> in this repository) — a deep dive into the Transformer lineage, scaling, efficiency, multimodal/generative models, and the modern serving/alignment stack.</li>
+</ul>
+<hr>
+<p><em>End of white paper.</em></p>
+
+</div>
+
+<!-- Mermaid (diagrams) -->
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  window.__mermaidReady = false;
+  try {
+    await mermaid.run({ querySelector: "pre.mermaid" });
+  } catch (e) { console.error("mermaid", e); }
+  window.__mermaidReady = true;
+</script>
+
+<script>
+  function renderAll() {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false
+      });
+    }
+    if (window.hljs) {
+      document.querySelectorAll("pre code").forEach((el) => {
+        try { hljs.highlightElement(el); } catch (e) {}
+      });
+    }
+    window.__katexHljsReady = true;
+  }
+  window.addEventListener("load", renderAll);
+</script>
+</body>
+</html>
